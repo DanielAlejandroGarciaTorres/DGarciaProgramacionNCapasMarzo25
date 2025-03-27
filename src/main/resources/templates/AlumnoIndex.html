@@ -24,23 +24,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Hugo Isaac Arias Ruíz</td>
-                        <td>HRuiz</td>
-                        <td>Telefono:1234567890</td>
-                        <td>Toluca</td>
-                        <td>Eliminar</td>
+                    <tr th:each="alumno : ${listaAlumnos}">
+                        <td><a class="btn btn-warning"><i class="bi bi-pencil-square"></i></a></td>
+                        <td th:text="${alumno.Nombre}"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a></td>
                     </tr>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Jesús Alejandro Domingo Peralta</td>
-                        <td>JAlejandro</td>
-                        <td>Telefono:1234567891</td>
-                        <td>Edomez</td>
-                        <td>Eliminar</td>
-                    </tr>
-
                 </tbody>
             </table>
         </div>
