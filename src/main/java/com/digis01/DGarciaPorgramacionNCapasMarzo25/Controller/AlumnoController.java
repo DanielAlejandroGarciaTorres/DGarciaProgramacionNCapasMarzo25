@@ -8,14 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/Alumno")
 public class AlumnoController {
-    
-   // Model y ModelAttribute
+
+    // Model y ModelAttribute
     @GetMapping
-    public String Index(Model model){
-        
-        String nombre  = "Jesus";
+    public String Index(Model model) {
+
+        String nombre = "Jesus";
         model.addAttribute("nombre", nombre);
-        
         return "AlumnoIndex";
     }
+
+    @GetMapping("Add")
+    public String Form() {
+        return "FormAlumno";
+    }
+
 }
