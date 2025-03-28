@@ -1,6 +1,11 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO;
 
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Alumno;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Colonia;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Direccion;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Estado;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Municipio;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
 import java.sql.ResultSet;
@@ -32,16 +37,34 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                         result.objects = new ArrayList<>();
 
                         while (resultSet.next()) {
-                            Alumno alumno = new Alumno();
-                            alumno.setIdAlumno(resultSet.getInt("idAlumno"));
-                            alumno.setNombre(resultSet.getString("NombreAlumno"));
-                            alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
-                            alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
-                            alumno.Semestre = new Semestre();
-                            alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
-                            alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
-
-                            result.objects.add(alumno);
+                            
+                            AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+                            alumnoDireccion.Alumno = new Alumno();
+                            alumnoDireccion.Alumno.setIdAlumno(resultSet.getInt("idAlumno"));
+                            alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
+                            alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
+                            alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                            alumnoDireccion.Alumno.Semestre = new Semestre();
+                            alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
+                            alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
+                            alumnoDireccion.Direcciones = new ArrayList<>();
+                            Direccion direccion = new Direccion();
+                            direccion.setIdDireccion(resultSet.getInt("IdDireccion"));
+                            direccion.setCalle(resultSet.getString("Calle"));
+                            direccion.setNumeroInterior(resultSet.getString("NumeroInterior"));
+                            direccion.setNumeroExterior(resultSet.getString("NumeroExterior"));
+                            direccion.Colonia = new Colonia();
+                            direccion.Colonia.setIdColonia(resultSet.getInt("IdColonia"));
+                            direccion.Colonia.setNombre(resultSet.getString("NombreColonia"));
+                            direccion.Colonia.setCodigoPostal(resultSet.getString("CodigoPostal"));
+                            direccion.Colonia.Municipio = new Municipio();
+                            direccion.Colonia.Municipio.setIdMunicipio(resultSet.getInt("IdMunicipio"));
+                            direccion.Colonia.Municipio.setNombre(resultSet.getString("NombreMunicipio"));
+                            direccion.Colonia.Municipio.Estado = new Estado();
+                            direccion.Colonia.Municipio.Estado.setIdEstado(resultSet.getInt("IdEstado"));
+                            direccion.Colonia.Municipio.Estado.setNombre(resultSet.getString("NombreEstado"));
+                            alumnoDireccion.Direcciones.add(direccion);
+                            result.objects.add(alumnoDireccion);
                         }
                         result.correct = true;
                         return 1;

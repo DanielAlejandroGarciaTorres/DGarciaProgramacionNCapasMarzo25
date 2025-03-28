@@ -24,12 +24,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="alumno : ${listaAlumnos}">
+                    <tr th:each="alumnoDirecciones : ${listaAlumnos}">
                         <td><a class="btn btn-warning"><i class="bi bi-pencil-square"></i></a></td>
-                        <td th:text="${alumno.Nombre}"></td>
+                        <td th:text="|${alumnoDirecciones.Alumno.Nombre} ${alumnoDirecciones.Alumno.ApellidoPaterno}|"></td>
                         <td></td>
                         <td></td>
-                        <td></td>
+                        <td th:each="direccion : ${alumnoDirecciones.Direcciones}"><span th:text="|${direccion.Calle} ${direccion.NumeroInterior} ${direccion.NumeroExterior}, ${direccion.Colonia.Nombre}|"></span></td>
                         <td><a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a></td>
                     </tr>
                 </tbody>

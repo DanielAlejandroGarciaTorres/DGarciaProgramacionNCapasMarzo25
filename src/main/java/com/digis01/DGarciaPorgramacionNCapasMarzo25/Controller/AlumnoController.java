@@ -20,7 +20,6 @@ public class AlumnoController {
     public String Index(Model model) {
 
         Result result = alumnoDAOImplementation.GetAll();
-        
         model.addAttribute("listaAlumnos", result.objects);
         
         return "AlumnoIndex";
