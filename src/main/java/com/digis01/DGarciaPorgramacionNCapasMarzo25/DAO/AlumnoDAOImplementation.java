@@ -101,4 +101,17 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         return result;
     }
 
+    @Override
+    public Result Add(AlumnoDireccion alumnoDireccion) {
+        Result result = new Result();
+        
+        try {
+            /*SP ADD*/
+        } catch (Exception ex) {
+            
+        }
+        
+        return result;
+    }
+
 }
