@@ -11,6 +11,10 @@ public class Alumno {
     private String ApellidoPaterno;
     private String ApellidoMaterno;
     public Semestre Semestre;
+    private String Username;
+    private String Email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date FechaNacimiento;
     
     public Alumno(){
         
@@ -61,5 +65,30 @@ public class Alumno {
     public void setApellidoMaterno(String ApellidoMaterno) {
         this.ApellidoMaterno = ApellidoMaterno;
     }
+
+    public String getUsername() {
+        return Username;
+    }
+
+    public void setUsername(String Username) {
+        this.Username = Username;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String Email) {
+        this.Email = Email;
+    }
+
+    public Date getFechaNacimiento() {
+        return FechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date FechaNacimiento) {
+        this.FechaNacimiento = FechaNacimiento;
+    }
+    
     
 }

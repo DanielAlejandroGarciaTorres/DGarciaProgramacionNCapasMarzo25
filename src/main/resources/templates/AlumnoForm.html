@@ -11,53 +11,118 @@
         <div class="container">
 
             <form th:action="@{/Alumno/Form}" method="post" th:object="${alumnoDireccion}">
-                <div class="row mb-4">
-                    <div class="col-md-4 text-center">
-                        <div class="card p-3">
+                <!--                <div class="row mb-4">
+                                    <div class="col-md-4 text-center">
+                                        <div class="card p-3">
+                                            <label for="imagenFile" class="form-label fw-bold">Imagen</label>
+                                            <input type="file" class="form-control" name="imagenFile" id="imagenFile">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/6326/6326055.png" class="img-fluid mt-3 rounded" alt="Imagen del alumno">  
+                                        </div>
+                                    </div>
+                
+                                    <div class="col-md-8">
+                                        <div class="card p-3">
+                                            <div class="mb-3">
+                                                <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
+                                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                    <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
+                                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno">
+                                                </div>
+                                                <div class="col mb-3">
+                                                    <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
+                                                    <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno">
+                                                </div>
+                                                <div class="col mb-3">
+                                                    <label for="FechaNacAlumno" class="form-label fw-bold">FechaNaciemiento</label>
+                                                    <input id="FechaNacAlumno" type="date" class="form-control">
+                                                </div>
+                                            </div>
+                
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                    <label for="UserNameAlumno" class="form-label fw-bold">Username</label>
+                                                    <input id="UserNameAlumno" type="text" class="form-control" placeholder="Username">
+                                                </div>
+                                                <div class="col mb-3">
+                                                    <label for="EmailAlumno" class="form-label fw-bold">Email</label>
+                                                    <input id="EmailAlumno" type="text" class="form-control" placeholder="Email">
+                                                </div>
+                                                <div class="col mb-3">
+                                                    <label for="PasswordAlumno" class="form-label fw-bold">Password</label>
+                                                    <input id="PasswordAlumno" type="password" class="form-control" placeholder="Contraseña">
+                                                </div>
+                                            </div>
+                                            
+                                            
+                
+                                        </div>
+                                    </div>
+                                </div>-->
+                <div class="row">
+                    <div class="col-md-4 text-center d-flex flex-column align-items-center">
+                        <div class="card p-3 w-100 h-100">
                             <label for="imagenFile" class="form-label fw-bold">Imagen</label>
-                            <input type="file" class="form-control" name="imagenFile" id="imagenFile">
-                            <img src="https://cdn-icons-png.flaticon.com/512/6326/6326055.png" class="img-fluid mt-3 rounded" alt="Imagen del alumno">  
+                            <input type="file" class="form-control mb-2" name="imagenFile" id="imagenFile">
+                            <img src="https://cdn-icons-png.flaticon.com/512/6326/6326055.png" class="img-fluid rounded" alt="Imagen del alumno" style="max-height: 250px; object-fit: contain;">
                         </div>
                     </div>
-
                     <div class="col-md-8">
-                        <div class="card p-3">
+                        <div class="card p-3 h-100">
                             <div class="mb-3">
                                 <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
                                 <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}">
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
-                                <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
+                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{Alumno.ApellidoPaterno}">
+                                </div>
+                                <div class="col mb-3">
+                                    <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
+                                    <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno" th:field="*{Alumno.ApellidoMaterno}">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
-                                <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="FechaNacAlumno" class="form-label fw-bold">Fecha de Nacimiento</label>
+                                    <input id="FechaNacAlumno" type="date" class="form-control" th:field="*{Alumno.FechaNacimiento}">
+                                </div>
+                                <div class="col mb-3">
+                                    <label for="UserNameAlumno" class="form-label fw-bold">Username</label>
+                                    <input id="UserNameAlumno" type="text" class="form-control" placeholder="Username" th:field="*{Alumno.Username}">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="UserNameAlumno" class="form-label fw-bold">Username</label>
-                                <input id="UserNameAlumno" type="text" class="form-control" placeholder="Username">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="EmailAlumno" class="form-label fw-bold">Email</label>
+                                    <input id="EmailAlumno" type="email" class="form-control" placeholder="Email" th:field="*{Alumno.Email}">
+                                </div>
+                                <div class="col mb-3">
+                                    <label for="PasswordAlumno" class="form-label fw-bold">Password</label>
+                                    <input id="PasswordAlumno" type="password" class="form-control" placeholder="Contraseña">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <hr>
 
                 <div class="card p-3">
                     <div class="row mb-3">
                         <div class="col-md-8">
                             <label class="form-label fw-bold">Calle</label>
-                            <input type="text" class="form-control" placeholder="Calle">
+                            <input type="text" class="form-control" placeholder="Calle" th:field="*{Direccion.Calle}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-bold"># Interior</label>
-                            <input type="text" class="form-control" placeholder="# int.">
+                            <input type="text" class="form-control" placeholder="# int." th:field="*{Direccion.NumeroInterior}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-bold"># Exterior</label>
-                            <input type="text" class="form-control" placeholder="# ext.">
+                            <input type="text" class="form-control" placeholder="# ext." th:field="*{Direccion.NumeroExterior}">
                         </div>
                     </div>
 

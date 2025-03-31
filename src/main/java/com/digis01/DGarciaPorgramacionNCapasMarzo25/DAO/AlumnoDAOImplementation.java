@@ -106,9 +106,29 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         Result result = new Result();
         
         try {
-            /*SP ADD*/
+            jdbcTemplate.execute("{CALL AlumnoDireccionAdd(?,?,?,?,?,?,?,?,?,?,?)}" ,(CallableStatementCallback<Integer>) callableStatement ->{
+                callableStatement.setString(1, alumnoDireccion.Alumno.getNombre());
+                callableStatement.setString(2, alumnoDireccion.Alumno.getApellidoPaterno());
+                callableStatement.setString(3, alumnoDireccion.Alumno.getApellidoMaterno());
+                callableStatement.setInt(4, alumnoDireccion.Alumno.Semestre.getIdSemestre());
+                callableStatement.setString(5, alumnoDireccion.Alumno.getUsername());
+                callableStatement.setString(6, alumnoDireccion.Alumno.getEmail());
+                callableStatement.setDate(7, new java.sql.Date(alumnoDireccion.Alumno.getFechaNacimiento().getTime()));
+                callableStatement.setString(8, alumnoDireccion.Direccion.getCalle());
+                callableStatement.setString(9, alumnoDireccion.Direccion.getNumeroInterior());
+                callableStatement.setString(10, alumnoDireccion.Direccion.getNumeroExterior());
+                callableStatement.setInt(11, alumnoDireccion.Direccion.Colonia.getIdColonia());
+                
+                int rowAffected = callableStatement.executeUpdate();
+                
+                result.correct = rowAffected > 0 ? true : false;
+                
+            return 1;
+            });
         } catch (Exception ex) {
-            
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
         }
         
         return result;

@@ -6,6 +6,7 @@ import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Colonia;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Direccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ public class AlumnoController {
         if (IdAlumno == 0) { // Agregar
             AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
             alumnoDireccion.Alumno = new Alumno();
+            alumnoDireccion.Alumno.Semestre = new Semestre();
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.Colonia = new Colonia();
                     
@@ -51,10 +53,11 @@ public class AlumnoController {
 
     @PostMapping("Form")
     public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion) {
-        
+        alumnoDireccion.Alumno.Semestre = new Semestre();
+        alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
         alumnoDAOImplementation.Add(alumnoDireccion);
         
-        return "";
+        return "AlumnoIndex";
     }
 
 }
