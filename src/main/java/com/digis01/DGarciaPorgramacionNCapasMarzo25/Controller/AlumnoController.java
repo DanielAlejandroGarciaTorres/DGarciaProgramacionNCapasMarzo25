@@ -46,6 +46,8 @@ public class AlumnoController {
             return "AlumnoForm";
         } else { // Editar
             System.out.println("Voy a editar");
+            Result result = alumnoDAOImplementation.direccionesByIdUsuario(IdAlumno);
+            model.addAttribute("alumnoDirecciones", result.object);
             return "AlumnoView";
         }
 
@@ -60,4 +62,5 @@ public class AlumnoController {
         return "AlumnoIndex";
     }
 
+    
 }

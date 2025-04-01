@@ -10,4 +10,6 @@ public interface IAlumnoDAO {
     Result GetAll(); //método abstracto 
     
     Result Add(AlumnoDireccion alumnoDireccion);
+    
+    Result direccionesByIdUsuario(int IdUsuario);
 }
