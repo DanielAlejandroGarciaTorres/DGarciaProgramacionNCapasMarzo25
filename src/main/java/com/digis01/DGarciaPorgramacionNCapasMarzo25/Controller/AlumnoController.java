@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/Alumno")
@@ -48,9 +49,23 @@ public class AlumnoController {
             System.out.println("Voy a editar");
             Result result = alumnoDAOImplementation.direccionesByIdUsuario(IdAlumno);
             model.addAttribute("alumnoDirecciones", result.object);
-            return "AlumnoView";
+            return "AlumnoDetail";
         }
 
+    }
+    
+    @GetMapping("/FormEditable")
+    public String FormEditable(Model model, @RequestParam int IdAlumno, @RequestParam(required = false) Integer IdDireccion ){
+        
+        if(IdAlumno > 0 && IdDireccion == 0){
+            // agrega direccion
+        } else if (IdAlumno > 0 && IdDireccion > 0) {
+            // editar direccion
+        } else {    
+            // editar alumno
+        }
+        
+        return "AlumnoForm";
     }
 
     @PostMapping("Form")
