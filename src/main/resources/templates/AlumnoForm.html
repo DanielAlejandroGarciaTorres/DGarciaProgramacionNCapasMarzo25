@@ -11,62 +11,13 @@
         <div class="container">
 
             <form th:action="@{/Alumno/Form}" method="post" th:object="${alumnoDireccion}">
-                <!--                <div class="row mb-4">
-                                    <div class="col-md-4 text-center">
-                                        <div class="card p-3">
-                                            <label for="imagenFile" class="form-label fw-bold">Imagen</label>
-                                            <input type="file" class="form-control" name="imagenFile" id="imagenFile">
-                                            <img src="https://cdn-icons-png.flaticon.com/512/6326/6326055.png" class="img-fluid mt-3 rounded" alt="Imagen del alumno">  
-                                        </div>
-                                    </div>
                 
-                                    <div class="col-md-8">
-                                        <div class="card p-3">
-                                            <div class="mb-3">
-                                                <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
-                                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col mb-3">
-                                                    <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
-                                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno">
-                                                </div>
-                                                <div class="col mb-3">
-                                                    <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
-                                                    <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno">
-                                                </div>
-                                                <div class="col mb-3">
-                                                    <label for="FechaNacAlumno" class="form-label fw-bold">FechaNaciemiento</label>
-                                                    <input id="FechaNacAlumno" type="date" class="form-control">
-                                                </div>
-                                            </div>
-                
-                                            <div class="row">
-                                                <div class="col mb-3">
-                                                    <label for="UserNameAlumno" class="form-label fw-bold">Username</label>
-                                                    <input id="UserNameAlumno" type="text" class="form-control" placeholder="Username">
-                                                </div>
-                                                <div class="col mb-3">
-                                                    <label for="EmailAlumno" class="form-label fw-bold">Email</label>
-                                                    <input id="EmailAlumno" type="text" class="form-control" placeholder="Email">
-                                                </div>
-                                                <div class="col mb-3">
-                                                    <label for="PasswordAlumno" class="form-label fw-bold">Password</label>
-                                                    <input id="PasswordAlumno" type="password" class="form-control" placeholder="Contraseña">
-                                                </div>
-                                            </div>
-                                            
-                                            
-                
-                                        </div>
-                                    </div>
-                                </div>-->
                 <input type="hidden" th:field="*{Alumno.IdAlumno}">
                 <input type="hidden" th:field="*{Direccion.IdDireccion}">
                 
                 
                 
-                <div th:if="" class="row">
+                <div class="row">
                     <div class="col-md-4 text-center d-flex flex-column align-items-center">
                         <div class="card p-3 w-100 h-100">
                             <label for="imagenFile" class="form-label fw-bold">Imagen</label>
@@ -78,12 +29,14 @@
                         <div class="card p-3 h-100">
                             <div class="mb-3">
                                 <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
-                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}">
+                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}" onkeypress="return SoloLetras(event, this)" required>
+                                <span id="NombreAlumnoError" class="text-danger"></span>
                             </div>
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
-                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{Alumno.ApellidoPaterno}">
+                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{Alumno.ApellidoPaterno}" onkeypress="return SoloLetrasAscii(event, this)">
+                                    <span id="ApellidoPaternoAlumnoError" class="text-danger"></span>
                                 </div>
                                 <div class="col mb-3">
                                     <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
@@ -141,5 +94,40 @@
             </form>
 
         </div>
+        
+        <script>
+            
+            function SoloLetras(event, elemento){
+                var key = event.key;
+                var regEx = /^[a-zA-Z]+$/;
+                var spanError = document.getElementById(elemento.id + "Error");
+                
+                if(key.match(regEx)){
+                    console.log("Todo OK");
+                    spanError.innerHTML="";
+                    return true;
+                } else {
+                    console.log("NO OK");
+                    spanError.innerHTML="Solo letras :@";
+                    return false;
+                }
+            }
+            
+            
+            function SoloLetrasAscii(event, elemento){
+                var key = event.keyCode;
+                var spanError = document.getElementById(elemento.id + "Error");
+                
+                if((key >= 65 && key <= 90) || (key >= 97 && key <= 122)){
+                    console.log("Todo OK");
+                    spanError.innerHTML="";
+                    return true;
+                } else {
+                    console.log("NO OK");
+                    spanError.innerHTML="Solo letras :@";
+                    return false;
+                }
+            }
+        </script>
     </body>
 </html>
