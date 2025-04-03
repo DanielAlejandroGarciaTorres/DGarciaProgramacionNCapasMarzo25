@@ -11,12 +11,12 @@
         <div class="container">
 
             <form th:action="@{/Alumno/Form}" method="post" th:object="${alumnoDireccion}">
-                
+
                 <input type="hidden" th:field="*{Alumno.IdAlumno}">
                 <input type="hidden" th:field="*{Direccion.IdDireccion}">
-                
-                
-                
+
+
+
                 <div class="row">
                     <div class="col-md-4 text-center d-flex flex-column align-items-center">
                         <div class="card p-3 w-100 h-100">
@@ -29,8 +29,10 @@
                         <div class="card p-3 h-100">
                             <div class="mb-3">
                                 <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
-                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}" onkeypress="return SoloLetras(event, this)" required>
+                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}" onkeypress="return SoloLetras(event, this)">
+                                <span th:if="${#fields.hasErrors('Alumno.Nombre')}" th:errors="*{Alumno.Nombre}" ></span>
                                 <span id="NombreAlumnoError" class="text-danger"></span>
+
                             </div>
                             <div class="row">
                                 <div class="col mb-3">
@@ -56,7 +58,8 @@
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="EmailAlumno" class="form-label fw-bold">Email</label>
-                                    <input id="EmailAlumno" type="email" class="form-control" placeholder="Email" th:field="*{Alumno.Email}">
+                                    <input id="EmailAlumno" type="email" class="form-control" placeholder="Email" th:field="*{Alumno.Email}" onblur="return Email(event, this)">
+                                    <span id="EmailAlumnoError" class="text-danger"></span>
                                 </div>
                                 <div class="col mb-3">
                                     <label for="PasswordAlumno" class="form-label fw-bold">Password</label>
@@ -94,40 +97,41 @@
             </form>
 
         </div>
-        
+
         <script>
-            
-            function SoloLetras(event, elemento){
+
+            function SoloLetras(event, elemento) {
                 var key = event.key;
                 var regEx = /^[a-zA-Z]+$/;
                 var spanError = document.getElementById(elemento.id + "Error");
-                
-                if(key.match(regEx)){
+
+                if (key.match(regEx)) {
                     console.log("Todo OK");
-                    spanError.innerHTML="";
+                    spanError.innerHTML = "";
                     return true;
                 } else {
                     console.log("NO OK");
-                    spanError.innerHTML="Solo letras :@";
+                    spanError.innerHTML = "Solo letras :@";
                     return false;
                 }
             }
-            
-            
-            function SoloLetrasAscii(event, elemento){
+
+
+            function SoloLetrasAscii(event, elemento) {
                 var key = event.keyCode;
                 var spanError = document.getElementById(elemento.id + "Error");
-                
-                if((key >= 65 && key <= 90) || (key >= 97 && key <= 122)){
+
+                if ((key >= 65 && key <= 90) || (key >= 97 && key <= 122)) {
                     console.log("Todo OK");
-                    spanError.innerHTML="";
+                    spanError.innerHTML = "";
                     return true;
                 } else {
                     console.log("NO OK");
-                    spanError.innerHTML="Solo letras :@";
+                    spanError.innerHTML = "Solo letras :@";
                     return false;
                 }
             }
+
         </script>
     </body>
 </html>

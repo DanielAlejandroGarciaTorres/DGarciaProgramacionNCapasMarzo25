@@ -1,13 +1,17 @@
 
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.ML;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 public class AlumnoDireccion {
+    
+    @Valid
     public Alumno Alumno;
     public List<Direccion> Direcciones;
     public Direccion Direccion;
 
+    
     public Alumno getAlumno() {
         return Alumno;
     }

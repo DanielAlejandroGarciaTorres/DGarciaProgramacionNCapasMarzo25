@@ -7,9 +7,11 @@ import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Colonia;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Direccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,7 +71,14 @@ public class AlumnoController {
     }
 
     @PostMapping("Form")
-    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion) {
+    public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult, Model model) {
+        
+        if (BindingResult.hasErrors()) {
+            
+            model.addAttribute("alumnoDireccion", alumnoDireccion);
+            return "AlumnoForm";
+        }
+        
         alumnoDireccion.Alumno.Semestre = new Semestre();
         alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
         alumnoDAOImplementation.Add(alumnoDireccion);
