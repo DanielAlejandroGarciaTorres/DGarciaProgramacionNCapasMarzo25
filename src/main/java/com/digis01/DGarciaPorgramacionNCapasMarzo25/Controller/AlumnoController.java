@@ -1,6 +1,7 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.Controller;
 
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.AlumnoDAOImplementation;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.SemestreDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Alumno;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Colonia;
@@ -27,6 +28,9 @@ public class AlumnoController {
     private AlumnoDAOImplementation alumnoDAOImplementation;
     // Model y ModelAttribute
 
+    @Autowired
+    private SemestreDAOImplementation SemestreDAOImplementation;
+    
     @GetMapping
     public String Index(Model model) {
 
@@ -44,7 +48,8 @@ public class AlumnoController {
             alumnoDireccion.Alumno.Semestre = new Semestre();
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.Colonia = new Colonia();
-                    
+            
+            model.addAttribute("semestres", SemestreDAOImplementation.GetAll().object);
             model.addAttribute("alumnoDireccion", alumnoDireccion);
             return "AlumnoForm";
         } else { // Editar
