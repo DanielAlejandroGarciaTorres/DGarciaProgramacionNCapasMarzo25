@@ -56,15 +56,30 @@ public class AlumnoController {
 
     }
     
-    @GetMapping("/FormEditable")
+    @GetMapping("/formEditable")
     public String FormEditable(Model model, @RequestParam int IdAlumno, @RequestParam(required = false) Integer IdDireccion ){
         
-        if(IdAlumno > 0 && IdDireccion == 0){
-            // agrega direccion
-        } else if (IdAlumno > 0 && IdDireccion > 0) {
-            // editar direccion
-        } else {    
-            // editar alumno
+        if (IdDireccion == null) {
+            AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+            alumnoDireccion.Alumno = new Alumno();
+            alumnoDireccion.Alumno.setIdAlumno(1);
+            alumnoDireccion.Direccion = new Direccion();
+            alumnoDireccion.Direccion.setIdDireccion(-1);
+            model.addAttribute("alumnoDireccion", alumnoDireccion);
+        } else if (IdDireccion == 0) {
+            AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+            alumnoDireccion.Alumno = new Alumno();
+            alumnoDireccion.Alumno.setIdAlumno(1);
+            alumnoDireccion.Direccion = new Direccion();
+            alumnoDireccion.Direccion.setIdDireccion(0);
+            model.addAttribute("alumnoDireccion", alumnoDireccion);
+        } else {
+            AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+            alumnoDireccion.Alumno = new Alumno();
+            alumnoDireccion.Alumno.setIdAlumno(1);
+            alumnoDireccion.Direccion = new Direccion();
+            alumnoDireccion.Direccion.setIdDireccion(1);
+            model.addAttribute("alumnoDireccion", alumnoDireccion);
         }
         
         return "AlumnoForm";

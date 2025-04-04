@@ -106,7 +106,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         Result result = new Result();
         
         try {
-            jdbcTemplate.execute("{CALL AlumnoDireccionAdd(?,?,?,?,?,?,?,?,?,?,?)}" ,(CallableStatementCallback<Integer>) callableStatement ->{
+            jdbcTemplate.execute("{CALL DireccionesByIdAlumno(?,?,?,?,?,?,?,?,?,?,?)}" ,(CallableStatementCallback<Integer>) callableStatement ->{
                 callableStatement.setString(1, alumnoDireccion.Alumno.getNombre());
                 callableStatement.setString(2, alumnoDireccion.Alumno.getApellidoPaterno());
                 callableStatement.setString(3, alumnoDireccion.Alumno.getApellidoMaterno());
@@ -156,6 +156,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                 
                 if (resultSetAlumno.next()) {
                     alumnoDireccion.Alumno = new Alumno();
+                    alumnoDireccion.Alumno.setIdAlumno(resultSetAlumno.getInt("IdAlumno"));
                     alumnoDireccion.Alumno.setNombre(resultSetAlumno.getString("NombreAlumno"));
                     alumnoDireccion.Alumno.setApellidoPaterno(resultSetAlumno.getString("ApellidoPaterno"));
                     alumnoDireccion.Alumno.setApellidoMaterno(resultSetAlumno.getString("ApellidoMaterno"));
@@ -182,6 +183,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                 
                 
                 result.object = alumnoDireccion;
+                result.correct = true;
                 return 1;
             });
             

@@ -14,10 +14,10 @@
                     <div class="card">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNT31I-b-Jdf8bjPM-mm-V1qCpb-oudRLvtw&s" style="max-height: 250px; object-fit: contain" class="card-img-top" alt="Imagen del usuario">
                         <div class="card-body">
-                            <h5 class="card-title">Juan Pérez</h5>
-                            <p class="card-text"><strong>Usuario:</strong> juanperez123</p>
-                            <p class="card-text"><strong>Correo:</strong> juan.perez@correo.com</p>                            
-                            <a class="btn btn-primary col-12" th:href="@{/Alumno/FormEditable?IdAlumno=${idAlumno}}">Editar Información</a>
+                            <h3 th:text="|${alumnoDirecciones.Alumno.Nombre} ${alumnoDirecciones.Alumno.ApellidoPaterno}|"></h3>
+                            <p class="card-text" th:text="|Usuario: ${alumnoDirecciones.Alumno.Username}|"></p>
+                            <p class="card-text" th:text="|Email ${alumnoDirecciones.Alumno.Email}|"></p>                            
+                            <a class="btn btn-primary col-12" th:href="@{/Alumno/formEditable?IdAlumno=}+${alumnoDirecciones.Alumno.IdAlumno}">Editar Información</a>
                         </div>
                     </div>
                 </div>
@@ -29,11 +29,11 @@
                             <h5 class="card-title">Direcciones Asignadas</h5>
 
 
-                            <a class="btn btn-secondary mt-2 col-12">Agregar Dirección</a>
+                            <a class="btn btn-secondary mt-2 col-12" th:href="@{/Alumno/formEditable?IdAlumno=}+${alumnoDirecciones.Alumno.IdAlumno}+'&IdDireccion=0'">Agregar Dirección</a>
 
                             <br/><br/>
 
-                            <table class="table table-responsive table-bordered table-dark table-striped"">
+                            <table class="table table-responsive table-bordered table-dark table-striped">
                                 <thead>
                                     <tr>
                                         <th>Dirección</th>
@@ -41,46 +41,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Calle Falsa 123, Ciudad</td>
+                                    <tr th:each="direccion : ${alumnoDirecciones.Direcciones}">
+                                        <td th:text="${direccion.Calle}"></td>
                                         <td>
-                                            <button class="btn btn-warning btn-sm" th:href="@{/Alumno/FormEditable?IdAlumno=${IdAlumno}&IdDireccion=0}">Editar</button>
-                                            <button class="btn btn-danger btn-sm">Eliminar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Avenida Siempre Viva 456, Ciudad</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">Editar</button>
-                                            <button class="btn btn-danger btn-sm">Eliminar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Avenida Siempre Viva 456, Ciudad</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">Editar</button>
-                                            <button class="btn btn-danger btn-sm">Eliminar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Avenida Siempre Viva 456, Ciudad</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">Editar</button>
-                                            <button class="btn btn-danger btn-sm">Eliminar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Avenida Siempre Viva 456, Ciudad</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">Editar</button>
-                                            <button class="btn btn-danger btn-sm">Eliminar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Avenida Siempre Viva 456, Ciudad</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">Editar</button>
-                                            <button class="btn btn-danger btn-sm">Eliminar</button>
+                                            <a class="btn btn-warning btn-sm" th:href="@{/Alumno/formEditable?IdAlumno=}+${alumnoDirecciones.Alumno.IdAlumno}+'&IdDireccion='+${direccion.IdDireccion}">Editar</a>
+                                            <a class="btn btn-danger btn-sm">Editar</a>
                                         </td>
                                     </tr>
                                 </tbody>
