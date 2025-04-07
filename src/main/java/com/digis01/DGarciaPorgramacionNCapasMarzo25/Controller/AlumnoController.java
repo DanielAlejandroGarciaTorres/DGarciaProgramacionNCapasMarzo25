@@ -3,6 +3,7 @@ package com.digis01.DGarciaPorgramacionNCapasMarzo25.Controller;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.AlumnoDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.DireccionDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.EstadoDAOImplementation;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.MunicipioDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.SemestreDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Alumno;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/Alumno")
@@ -39,6 +41,9 @@ public class AlumnoController {
     @Autowired
     private EstadoDAOImplementation estadoDAOImplementation;
 
+    @Autowired
+    private MunicipioDAOImplementation municipioDAOImplementation;
+    
     @GetMapping
     public String Index(Model model) {
 
@@ -123,4 +128,12 @@ public class AlumnoController {
         return "AlumnoIndex";
     }
 
+    
+    @GetMapping("MunicipioByIdEstado/{IdEstado}")
+    @ResponseBody
+    public Result MunicipioByIdEstado(@PathVariable int IdEstado){
+        Result result = municipioDAOImplementation.MunicipioByIdEstado(IdEstado);
+        
+        return result;
+    }
 }
