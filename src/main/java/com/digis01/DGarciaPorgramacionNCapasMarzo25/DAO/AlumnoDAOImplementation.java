@@ -37,9 +37,9 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                         result.objects = new ArrayList<>();
 
                         while (resultSet.next()) {
-                            
+
                             int idAlumno = resultSet.getInt("IdAlumno");
-                            if (!result.objects.isEmpty() && idAlumno == ((AlumnoDireccion) (result.objects.get(result.objects.size() -1))).Alumno.getIdAlumno() ) {
+                            if (!result.objects.isEmpty() && idAlumno == ((AlumnoDireccion) (result.objects.get(result.objects.size() - 1))).Alumno.getIdAlumno()) {
                                 /*agregamos solo direccion*/
                                 Direccion direccion = new Direccion();
                                 direccion.setIdDireccion(resultSet.getInt("IdDireccion"));
@@ -56,7 +56,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                                 direccion.Colonia.Municipio.Estado = new Estado();
                                 direccion.Colonia.Municipio.Estado.setIdEstado(resultSet.getInt("IdEstado"));
                                 direccion.Colonia.Municipio.Estado.setNombre(resultSet.getString("NombreEstado"));
-                                ((AlumnoDireccion) (result.objects.get(result.objects.size() -1))).Direcciones.add(direccion);
+                                ((AlumnoDireccion) (result.objects.get(result.objects.size() - 1))).Direcciones.add(direccion);
                             } else { // el id no es el mismo ó la lista es nueva
                                 AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
                                 alumnoDireccion.Alumno = new Alumno();
@@ -104,9 +104,9 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
     @Override
     public Result Add(AlumnoDireccion alumnoDireccion) {
         Result result = new Result();
-        
+
         try {
-            jdbcTemplate.execute("{CALL DireccionesByIdAlumno(?,?,?,?,?,?,?,?,?,?,?)}" ,(CallableStatementCallback<Integer>) callableStatement ->{
+            jdbcTemplate.execute("{CALL DireccionesByIdAlumno(?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Integer>) callableStatement -> {
                 callableStatement.setString(1, alumnoDireccion.Alumno.getNombre());
                 callableStatement.setString(2, alumnoDireccion.Alumno.getApellidoPaterno());
                 callableStatement.setString(3, alumnoDireccion.Alumno.getApellidoMaterno());
@@ -118,42 +118,40 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                 callableStatement.setString(9, alumnoDireccion.Direccion.getNumeroInterior());
                 callableStatement.setString(10, alumnoDireccion.Direccion.getNumeroExterior());
                 callableStatement.setInt(11, alumnoDireccion.Direccion.Colonia.getIdColonia());
-                
+
                 int rowAffected = callableStatement.executeUpdate();
-                
+
                 result.correct = rowAffected > 0 ? true : false;
-                
-            return 1;
+
+                return 1;
             });
         } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        
+
         return result;
     }
 
     @Override
     public Result direccionesByIdUsuario(int IdAlumno) {
         Result result = new Result();
-        
+
         try {
-            
-            
+
             jdbcTemplate.execute("CALL DireccionesByIdAlumno(?,?,?)", (CallableStatementCallback<Integer>) callableStatement -> {
-            
+
                 callableStatement.registerOutParameter(1, Types.REF_CURSOR);
                 callableStatement.registerOutParameter(2, Types.REF_CURSOR);
                 callableStatement.setInt(3, IdAlumno);
-                
+
                 callableStatement.execute();
-                
+
                 AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
-                
+
                 ResultSet resultSetAlumno = (ResultSet) callableStatement.getObject(1);
-                
-                
+
                 if (resultSetAlumno.next()) {
                     alumnoDireccion.Alumno = new Alumno();
                     alumnoDireccion.Alumno.setIdAlumno(resultSetAlumno.getInt("IdAlumno"));
@@ -161,15 +159,15 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                     alumnoDireccion.Alumno.setApellidoPaterno(resultSetAlumno.getString("ApellidoPaterno"));
                     alumnoDireccion.Alumno.setApellidoMaterno(resultSetAlumno.getString("ApellidoMaterno"));
                 }
-                
+
                 ResultSet resultSetDireccion = (ResultSet) callableStatement.getObject(2);
-                
+
                 alumnoDireccion.Direcciones = new ArrayList();
-                
-                while(resultSetDireccion.next()){
-                    
+
+                while (resultSetDireccion.next()) {
+
                     Direccion direccion = new Direccion();
-                    
+
                     direccion.setIdDireccion(resultSetDireccion.getInt("IdDireccion"));
                     direccion.setCalle(resultSetDireccion.getString("Calle"));
                     direccion.setNumeroExterior(resultSetDireccion.getString("NumeroExterior"));
@@ -177,22 +175,62 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                     direccion.Colonia = new Colonia();
                     direccion.Colonia.setIdColonia(resultSetDireccion.getInt("IdColonia"));
                     direccion.Colonia.setNombre(resultSetDireccion.getString("NombreColonia"));
-                    
+
                     alumnoDireccion.Direcciones.add(direccion);
                 }
-                
-                
+
                 result.object = alumnoDireccion;
                 result.correct = true;
                 return 1;
             });
-            
+
         } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        
+
+        return result;
+    }
+
+    @Override
+    public Result GetById(int IdAlumno) {
+        Result result = new Result();
+
+        try {
+
+            jdbcTemplate.execute("CALL AlumnoById(?,?)", (CallableStatementCallback<Integer>) callableStatement -> {
+                
+                callableStatement.setInt(1, IdAlumno);
+                callableStatement.registerOutParameter(2, Types.REF_CURSOR);
+                callableStatement.execute();
+                
+                ResultSet resultSet = (ResultSet) callableStatement.getObject(2);
+                
+                if(resultSet.next()) {
+                    AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+                    alumnoDireccion.Alumno = new Alumno();
+                    alumnoDireccion.Alumno.setIdAlumno(resultSet.getInt("IdAlumno"));
+                    alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
+                    alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
+                    alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("IdAlumno"));
+                    alumnoDireccion.Alumno.Semestre = new Semestre();
+                    alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
+                    alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
+                    
+                    result.object = alumnoDireccion;
+                }
+                
+                result.correct = false;
+                return 1;
+            });
+
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
+
         return result;
     }
 

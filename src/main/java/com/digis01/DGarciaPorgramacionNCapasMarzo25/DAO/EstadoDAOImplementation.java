@@ -1,50 +1,56 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO;
 
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Estado;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
-import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SemestreDAOImplementation implements ISemestreDAO{
+public class EstadoDAOImplementation implements IEstadoDAO {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;   
-    
+    private JdbcTemplate jdbcTemplate;
+
     @Override
     public Result GetAll() {
         Result result = new Result();
-        
+
         try {
-            
-            result.object = jdbcTemplate.execute("{ CALL SemestreGetAll(?)}", (CallableStatementCallback<List<Semestre>>) callableStatement -> {
+
+            jdbcTemplate.execute("CALL EstadoGetAll(?)", (CallableStatementCallback<Integer>) callableStatement -> {
+
                 callableStatement.registerOutParameter(1, Types.REF_CURSOR);
+                
                 callableStatement.execute();
+                
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
                 
-                List<Semestre> semestres = new ArrayList<>();
-                while(resultSet.next()){
-                    Semestre semestre = new Semestre();
-                    semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
-                    semestre.setNombre(resultSet.getString("Nombre"));
-                    semestres.add(semestre);
+                result.objects = new ArrayList<>();
+                while(resultSet.next()) {
+                    Estado estado = new Estado();
+                    
+                    estado.setIdEstado(resultSet.getInt("IdEstado"));
+                    estado.setNombre(resultSet.getString("Nombre"));
+                    
+                    result.objects.add(estado);
                 }
-                result.correct = true;
-                return semestres;
+                
+                return 1;
             });
-            
-        }catch (Exception ex) {
-            result.correct = false;
+
+            result.correct = true;
+        } catch (Exception ex) {
+            result.correct = true;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        
+
         return result;
     }
+
 }

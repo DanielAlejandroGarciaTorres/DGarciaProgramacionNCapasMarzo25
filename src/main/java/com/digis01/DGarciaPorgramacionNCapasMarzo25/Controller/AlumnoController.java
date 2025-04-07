@@ -1,6 +1,8 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.Controller;
 
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.AlumnoDAOImplementation;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.DireccionDAOImplementation;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.EstadoDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.SemestreDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Alumno;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
@@ -30,7 +32,13 @@ public class AlumnoController {
 
     @Autowired
     private SemestreDAOImplementation SemestreDAOImplementation;
-    
+
+    @Autowired
+    private DireccionDAOImplementation direccionDAOImplementation;
+
+    @Autowired
+    private EstadoDAOImplementation estadoDAOImplementation;
+
     @GetMapping
     public String Index(Model model) {
 
@@ -48,9 +56,10 @@ public class AlumnoController {
             alumnoDireccion.Alumno.Semestre = new Semestre();
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.Colonia = new Colonia();
-            
+
             model.addAttribute("semestres", SemestreDAOImplementation.GetAll().object);
             model.addAttribute("alumnoDireccion", alumnoDireccion);
+            model.addAttribute("estados", estadoDAOImplementation.GetAll().correct ? estadoDAOImplementation.GetAll().objects : null);
             return "AlumnoForm";
         } else { // Editar
             System.out.println("Voy a editar");
@@ -60,51 +69,58 @@ public class AlumnoController {
         }
 
     }
-    
+
     @GetMapping("/formEditable")
-    public String FormEditable(Model model, @RequestParam int IdAlumno, @RequestParam(required = false) Integer IdDireccion ){
-        
-        if (IdDireccion == null) {
+    public String FormEditable(Model model, @RequestParam int IdAlumno, @RequestParam(required = false) Integer IdDireccion) {
+
+        if (IdDireccion == null) { //Editar Alumno
             AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
-            alumnoDireccion.Alumno = new Alumno();
-            alumnoDireccion.Alumno.setIdAlumno(1);
+//            alumnoDireccion.Alumno.setIdAlumno(1);
+
+            alumnoDireccion = (AlumnoDireccion) alumnoDAOImplementation.GetById(IdAlumno).object;
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.setIdDireccion(-1);
             model.addAttribute("alumnoDireccion", alumnoDireccion);
-        } else if (IdDireccion == 0) {
+
+            model.addAttribute("semestres", SemestreDAOImplementation.GetAll().object);
+        } else if (IdDireccion == 0) { //Agregar dirección
             AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
             alumnoDireccion.Alumno = new Alumno();
             alumnoDireccion.Alumno.setIdAlumno(1);
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.setIdDireccion(0);
             model.addAttribute("alumnoDireccion", alumnoDireccion);
-        } else {
+            model.addAttribute("estados", estadoDAOImplementation.GetAll().correct ? estadoDAOImplementation.GetAll().objects : null);
+        } else { //Editar dirección
             AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
             alumnoDireccion.Alumno = new Alumno();
             alumnoDireccion.Alumno.setIdAlumno(1);
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.setIdDireccion(1);
+
+            alumnoDireccion.Direccion = (Direccion) direccionDAOImplementation.GetById(IdDireccion).object;
+
             model.addAttribute("alumnoDireccion", alumnoDireccion);
+            model.addAttribute("estados", estadoDAOImplementation.GetAll().correct ? estadoDAOImplementation.GetAll().objects : null);
         }
-        
+
         return "AlumnoForm";
     }
 
     @PostMapping("Form")
     public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult, Model model) {
-        
+
         if (BindingResult.hasErrors()) {
-            
+
             model.addAttribute("alumnoDireccion", alumnoDireccion);
             return "AlumnoForm";
         }
-        
+
         alumnoDireccion.Alumno.Semestre = new Semestre();
         alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
         alumnoDAOImplementation.Add(alumnoDireccion);
-        
+
         return "AlumnoIndex";
     }
 
-    
 }

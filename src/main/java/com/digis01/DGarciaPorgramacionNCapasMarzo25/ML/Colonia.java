@@ -32,6 +32,14 @@ public class Colonia {
     public void setCodigoPostal(String CodigoPostal) {
         this.CodigoPostal = CodigoPostal;
     }
+
+    public Municipio getMunicipio() {
+        return Municipio;
+    }
+
+    public void setMunicipio(Municipio Municipio) {
+        this.Municipio = Municipio;
+    }
     
     
     

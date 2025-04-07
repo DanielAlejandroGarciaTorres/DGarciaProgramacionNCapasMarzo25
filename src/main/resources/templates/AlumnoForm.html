@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <label for="PasswordAlumno" class="form-label fw-bold">Semestre</label>
+                                <label for="semestreAlumno" class="form-label fw-bold">Semestre</label>
                                 <select id="semestreAlumno" class="form-select" aria-label="Default select example" th:field="*{Alumno.Semestre.IdSemestre}">
                                     <option value=0 selected>Selecciona un semestre</option>
                                     <option th:each="semestre : ${semestres}" th:value="${semestre.IdSemestre}" th:text="${semestre.nombre}">One</option>
@@ -97,13 +97,21 @@
                         </div>
                     </div>
 
+                    <div class="row col-md-4">
+                        <label for="estadoddl" class="form-label fw-bold">Estado</label>
+                        <select id="estadoddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.Municipio.Estado}">
+                            <option value=0 selected>Selecciona un estado</option>
+                            <option th:each="estado : ${estados}" th:value="${estado.IdEstado}" th:text="${estado.Nombre}">One</option>
+                        </select>
+                    </div>
+
                     <div class="col-md-4">
                         <label for="ColoniaAlumno" class="form-label fw-bold">Colonia</label>
                         <input id="ColoniaAlumno" type="text" class="form-control" placeholder="Colonia" th:field="*{Direccion.Colonia.IdColonia}">
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-success mt-4 w-100 fw-bold">Agregar</button>
+                <button type="submit" class="btn btn-success mt-4 w-100 fw-bold" th:text="*{ (Alumno.IdAlumno) == 0 || (Direccion.IdDireccion) == 0 ? 'Agregar' : 'Editar'}">Agregar</button>
             </form>
 
         </div>

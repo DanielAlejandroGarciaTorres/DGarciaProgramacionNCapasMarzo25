@@ -11,4 +11,6 @@ public interface IAlumnoDAO {
     Result Add(AlumnoDireccion alumnoDireccion);
     
     Result direccionesByIdUsuario(int IdUsuario);
+    
+    Result GetById(int IdAlumno);
 }
