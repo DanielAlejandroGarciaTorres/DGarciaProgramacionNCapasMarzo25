@@ -44,10 +44,10 @@ public class AlumnoController {
 
     @Autowired
     private MunicipioDAOImplementation municipioDAOImplementation;
-    
+
     @Autowired
     private ColoniaDAOImplementation coloniaDAOImplementation;
-    
+
     @GetMapping
     public String Index(Model model) {
 
@@ -119,33 +119,47 @@ public class AlumnoController {
     @PostMapping("Form")
     public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult, Model model) {
 
-        if (BindingResult.hasErrors()) {
-
-            model.addAttribute("alumnoDireccion", alumnoDireccion);
-            return "AlumnoForm";
+//        if (alumnoDireccion.Alumno.getIdAlumno() == 0) {
+//            if (BindingResult.hasErrors()) {
+//                model.addAttribute("alumnoDireccion", alumnoDireccion);
+//                return "AlumnoForm";
+//            }
+//        }
+        if (alumnoDireccion.Alumno.getIdAlumno() == 0) { //Agregar
+            //Logica para consumir DAO para agregar un nuevo usuario
+//            alumnoDireccion.Alumno.Semestre = new Semestre();
+//            alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
+            System.out.println("Estoy agregando un nuevo usuario y direccion");
+            alumnoDAOImplementation.Add(alumnoDireccion);
+        } else {
+            if (alumnoDireccion.Direccion.getIdDireccion() == -1) { //Editar usuario
+                alumnoDAOImplementation.Update(alumnoDireccion.Alumno);
+                System.out.println("Estoy actualizando un usuario");
+            } else if (alumnoDireccion.Direccion.getIdDireccion() == 0) { //Agregar direccion
+                //alumnoDAOImplementation.AddDireccion(alumnoDireccion);
+                System.out.println("Estoy agregando direccion");
+            } else { //Editar direccion
+                //alumnoDAOImplementation.UpdateDireccion(alumnoDireccion);
+                System.out.println("Estoy actualizando direccion");
+            }
         }
 
-        alumnoDireccion.Alumno.Semestre = new Semestre();
-        alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
-        alumnoDAOImplementation.Add(alumnoDireccion);
-
-        return "AlumnoIndex";
+        return "redirect:/Alumno";
     }
 
-    
     @GetMapping("MunicipioByIdEstado/{IdEstado}")
     @ResponseBody
-    public Result MunicipioByIdEstado(@PathVariable int IdEstado){
+    public Result MunicipioByIdEstado(@PathVariable int IdEstado) {
         Result result = municipioDAOImplementation.MunicipioByIdEstado(IdEstado);
-        
+
         return result;
     }
-    
+
     @GetMapping("ColoniaByIdMunicipio/{IdMunicipio}")
     @ResponseBody
-    public Result ColoniaByIdMunicipio(@PathVariable int IdMunicipio){
+    public Result ColoniaByIdMunicipio(@PathVariable int IdMunicipio) {
         Result result = coloniaDAOImplementation.ColoniaByIdMunicipio(IdMunicipio);
-        
+
         return result;
     }
 }

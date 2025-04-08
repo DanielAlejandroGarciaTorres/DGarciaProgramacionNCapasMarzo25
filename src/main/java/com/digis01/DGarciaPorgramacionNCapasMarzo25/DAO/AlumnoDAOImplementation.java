@@ -200,14 +200,14 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         try {
 
             jdbcTemplate.execute("CALL AlumnoById(?,?)", (CallableStatementCallback<Integer>) callableStatement -> {
-                
+
                 callableStatement.setInt(1, IdAlumno);
                 callableStatement.registerOutParameter(2, Types.REF_CURSOR);
                 callableStatement.execute();
-                
+
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(2);
-                
-                if(resultSet.next()) {
+
+                if (resultSet.next()) {
                     AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
                     alumnoDireccion.Alumno = new Alumno();
                     alumnoDireccion.Alumno.setIdAlumno(resultSet.getInt("IdAlumno"));
@@ -217,14 +217,46 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                     alumnoDireccion.Alumno.Semestre = new Semestre();
                     alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
                     alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
-                    
+
                     result.object = alumnoDireccion;
                 }
-                
+
                 result.correct = false;
                 return 1;
             });
 
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
+
+        return result;
+    }
+
+    @Override
+    public Result Update(Alumno alumno) {
+        Result result = new Result();
+
+        try {
+            jdbcTemplate.execute("CALL AlumnoUpdate(?,?,?,?)", (CallableStatementCallback<Integer>) callableStatement -> {
+
+                callableStatement.setInt(1, alumno.getIdAlumno());
+                callableStatement.setString(2, alumno.getNombre());
+                callableStatement.setString(3, alumno.getApellidoPaterno());
+                callableStatement.setString(4, alumno.getApellidoMaterno());
+
+                int rowsAffected = callableStatement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    result.correct = true;
+                } else {
+                    result.correct = false;
+                    result.errorMessage = "Error en la actualización";
+                }
+
+                return 1;
+            });
         } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();

@@ -1,5 +1,6 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO;
 
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Alumno;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
 
@@ -13,4 +14,6 @@ public interface IAlumnoDAO {
     Result direccionesByIdUsuario(int IdUsuario);
     
     Result GetById(int IdAlumno);
+    
+    Result Update(Alumno alumno);
 }
