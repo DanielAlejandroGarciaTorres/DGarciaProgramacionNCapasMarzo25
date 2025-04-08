@@ -112,11 +112,18 @@
                             <option value=0 selected>Selecciona un municipio</option>
                         </select>
                     </div>
+                    
+                    <div class="row col-md-4">
+                        <label for="coloniaddl" class="form-label fw-bold">Colonia</label>
+                        <select id="coloniaddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.IdColonia}">
+                            <option value=0 selected>Selecciona una colonia</option>
+                        </select>
+                    </div>
 
-                    <div class="col-md-4">
+<!--                    <div class="col-md-4">
                         <label for="ColoniaAlumno" class="form-label fw-bold">Colonia</label>
                         <input id="ColoniaAlumno" type="text" class="form-control" placeholder="Colonia" th:field="*{Direccion.Colonia.IdColonia}">
-                    </div>
+                    </div>-->
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4 w-100 fw-bold" th:text="*{ (Alumno.IdAlumno) == 0 || (Direccion.IdDireccion) == 0 ? 'Agregar' : 'Editar'}">Agregar</button>
@@ -176,6 +183,26 @@
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("algo malio sal");
+                        }
+
+                    }
+                    );
+                });
+                
+                $("#municipioddl").change(function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: "/Alumno/ColoniaByIdMunicipio/" + document.getElementById("municipioddl").value,
+                        datatype: "json",
+                        success: function (result) {
+                            $("#coloniaddl").empty();
+                            $("#coloniaddl").append("<option value=0>Selecciona una colonia</option>");
+                            $.each(result.objects, function(i, colonia){
+                                $("#coloniaddl").append("<option value=" + colonia.idColonia + ">" + colonia.nombre + "</option>");
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Todo mal");
                         }
 
                     }
