@@ -1,7 +1,6 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.Controller;
 
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.AlumnoDAOImplementation;
-import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.ColoniaDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.DireccionDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.EstadoDAOImplementation;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO.MunicipioDAOImplementation;
@@ -44,9 +43,6 @@ public class AlumnoController {
 
     @Autowired
     private MunicipioDAOImplementation municipioDAOImplementation;
-    
-    @Autowired
-    private ColoniaDAOImplementation ColoniaDAOImplementation;
     
     @GetMapping
     public String Index(Model model) {
@@ -139,14 +135,5 @@ public class AlumnoController {
         Result result = municipioDAOImplementation.MunicipioByIdEstado(IdEstado);
         
         return result;
-    }
-    
-    @GetMapping("ColoniaByIdMunicipio/{IdMunicipio}")
-    @ResponseBody
-    public Result ColoniaByIdMunicipio(@PathVariable int IdMunicipio){
-        Result result = ColoniaDAOImplementation.ColoniaByIdMunicipio(IdMunicipio);
-        
-        return result;
-        
     }
 }
