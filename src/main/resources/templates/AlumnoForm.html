@@ -113,10 +113,22 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="ColoniaAlumno" class="form-label fw-bold">Colonia</label>
-                        <input id="ColoniaAlumno" type="text" class="form-control" placeholder="Colonia" th:field="*{Direccion.Colonia.IdColonia}">
+                    <div class="row col-md-4">
+                        <label for="coloniaddl" class="form-label fw-bold">Colonia</label>
+                        <select id="coloniaddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.IdColonia}">
+                            <option value=0 selected>Selecciona una colonia</option>
+                        </select>
                     </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">Codigo Postal</label>
+                        <input type="text" class="form-control" placeholder="CodigoPostal" th:field="*{Direccion.Colonia.CodigoPostal}">
+                    </div>
+
+                    <!--                    <div class="col-md-4">
+                                            <label for="ColoniaAlumno" class="form-label fw-bold">Colonia</label>
+                                            <input id="ColoniaAlumno" type="text" class="form-control" placeholder="Colonia" th:field="*{Direccion.Colonia.IdColonia}">
+                                        </div>-->
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4 w-100 fw-bold" th:text="*{ (Alumno.IdAlumno) == 0 || (Direccion.IdDireccion) == 0 ? 'Agregar' : 'Editar'}">Agregar</button>
@@ -169,18 +181,39 @@
                         datatype: "json",
                         success: function (data, textStatus, jqXHR) {
                             $("#municipioddl").empty();
-                            $("#municipioddl").append("<option value=0>Selecciona un municipio</option>")
-                            $.each(data.objects, function(i, municipio){
+                            $("#municipioddl").append("<option value=0>Selecciona un municipio</option>");
+                            $.each(data.objects, function (i, municipio) {
                                 $("#municipioddl").append("<option value=" + municipio.idMunicipio + ">" + municipio.nombre + "</option>");
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("algo malio sal");
                         }
-
                     }
                     );
                 });
+
+
+                $("#municipioddl").change(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Alumno/ColoniaByIdMunicipio/" + document.getElementById("municipioddl").value, //
+                        dataType: "json",
+                        success: function (result) {
+                            $("#coloniaddl").empty();
+                            $("#coloniaddl").append("<option value=0> Selecciona una colonia </option>");
+                            $.each(result.objects, function (i, colonia) {
+                                $("#coloniaddl").append("<option value = " + colonia.idColonia + ">" + colonia.nombre + "</option>");
+                            });
+
+                        }, error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Todo mal");
+                        }
+
+                    });
+
+                });
+
 
             });
 
