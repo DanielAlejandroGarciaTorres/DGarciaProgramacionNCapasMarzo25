@@ -98,32 +98,40 @@
                         </div>
                     </div>
 
-                    <div class="row col-md-4">
-                        <label for="estadoddl" class="form-label fw-bold">Estado</label>
-                        <select id="estadoddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.Municipio.Estado}">
-                            <option value=0 selected>Selecciona un estado</option>
-                            <option th:each="estado : ${estados}" th:value="${estado.IdEstado}" th:text="${estado.Nombre}">One</option>
-                        </select>
+                    <div class="row"> 
+                        <div class="col-md-3">
+                            <label for="estadoddl" class="form-label fw-bold">Estado</label>
+                            <select id="estadoddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.Municipio.Estado.IdEstado}">
+                                <option value=0 selected>Selecciona un estado</option>
+                                <option th:each="estado : ${estados}" th:value="${estado.IdEstado}" th:text="${estado.Nombre}">One</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="municipioddl" class="form-label fw-bold">Municipio</label>
+                            <select id="municipioddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.Municipio.IdMunicipio}">
+                                <option value=0 selected>Selecciona un municipio</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="coloniaddl" class="form-label fw-bold">Colonia</label>
+                            <select id="coloniaddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.IdColonia}">
+                                <option value=0 selected>Selecciona una colonia</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="CodigoPostal" class="form-label fw-bold">Codigo Postal</label>
+                            <input id="CodigoPostal" type="text" class="form-control" placeholder="Codigo Postal" th:field="*{Direccion.Colonia.CodigoPostal}">
+
+                        </div>
                     </div>
 
-                    <div class="row col-md-4">
-                        <label for="municipioddl" class="form-label fw-bold">Municipio</label>
-                        <select id="municipioddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.Municipio.Estado}">
-                            <option value=0 selected>Selecciona un municipio</option>
-                        </select>
-                    </div>
-                    
-                    <div class="row col-md-4">
-                        <label for="coloniaddl" class="form-label fw-bold">Colonia</label>
-                        <select id="coloniaddl" class="form-select" aria-label="Default select example" th:field="*{Direccion.Colonia.IdColonia}">
-                            <option value=0 selected>Selecciona una colonia</option>
-                        </select>
-                    </div>
-
-<!--                    <div class="col-md-4">
-                        <label for="ColoniaAlumno" class="form-label fw-bold">Colonia</label>
-                        <input id="ColoniaAlumno" type="text" class="form-control" placeholder="Colonia" th:field="*{Direccion.Colonia.IdColonia}">
-                    </div>-->
+                    <!--                    <div class="col-md-4">
+                                            <label for="ColoniaAlumno" class="form-label fw-bold">Colonia</label>
+                                            <input id="ColoniaAlumno" type="text" class="form-control" placeholder="Colonia" th:field="*{Direccion.Colonia.IdColonia}">
+                                        </div>-->
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4 w-100 fw-bold" th:text="*{ (Alumno.IdAlumno) == 0 || (Direccion.IdDireccion) == 0 ? 'Agregar' : 'Editar'}">Agregar</button>
@@ -177,7 +185,7 @@
                         success: function (data, textStatus, jqXHR) {
                             $("#municipioddl").empty();
                             $("#municipioddl").append("<option value=0>Selecciona un municipio</option>")
-                            $.each(data.objects, function(i, municipio){
+                            $.each(data.objects, function (i, municipio) {
                                 $("#municipioddl").append("<option value=" + municipio.idMunicipio + ">" + municipio.nombre + "</option>");
                             });
                         },
@@ -188,7 +196,7 @@
                     }
                     );
                 });
-                
+
                 $("#municipioddl").change(function () {
                     $.ajax({
                         type: 'GET',
@@ -197,8 +205,8 @@
                         success: function (result) {
                             $("#coloniaddl").empty();
                             $("#coloniaddl").append("<option value=0>Selecciona una colonia</option>");
-                            $.each(result.objects, function(i, colonia){
-                                $("#coloniaddl").append("<option value=" + colonia.idColonia + ">" + colonia.nombre + "</option>");
+                            $.each(result.objects, function (i, colonia) {
+                                $("#coloniaddl").append("<option value=" + colonia.idColonia + " data-cp=" + colonia.codigoPostal + ">" + colonia.nombre + "</option>");
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -207,6 +215,10 @@
 
                     }
                     );
+                });
+
+                $("#coloniaddl").change(function () {
+                    $("#CodigoPostal").val($("#coloniaddl option:selected").data("cp"));
                 });
 
             });
