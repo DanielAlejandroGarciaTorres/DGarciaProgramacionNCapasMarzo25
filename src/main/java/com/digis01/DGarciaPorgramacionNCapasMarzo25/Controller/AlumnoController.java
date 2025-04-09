@@ -103,15 +103,16 @@ public class AlumnoController {
         } else { //Editar dirección
             AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
             alumnoDireccion.Alumno = new Alumno();
-            alumnoDireccion.Alumno.setIdAlumno(1);
+            alumnoDireccion.Alumno.setIdAlumno(IdAlumno);
             alumnoDireccion.Direccion = new Direccion();
-            alumnoDireccion.Direccion.setIdDireccion(1);
+            alumnoDireccion.Direccion.setIdDireccion(IdDireccion);
 
-            alumnoDireccion.Direccion = (Direccion) direccionDAOImplementation.GetById(IdDireccion).object;
+            alumnoDireccion.Direccion = (Direccion) direccionDAOImplementation.GetByIdDireccion(IdDireccion).object;
 
             model.addAttribute("alumnoDireccion", alumnoDireccion);
             model.addAttribute("estados", estadoDAOImplementation.GetAll().correct ? estadoDAOImplementation.GetAll().objects : null);
-        }
+            // model.addAttribut("municipios", municipioDAOIMplementation.MunicipiosByIdEstado)
+        }   // model.addAttribute("colonias", coloniaDAOIMplementation.ColoniasByIdMunicipios)
 
         return "AlumnoForm";
     }

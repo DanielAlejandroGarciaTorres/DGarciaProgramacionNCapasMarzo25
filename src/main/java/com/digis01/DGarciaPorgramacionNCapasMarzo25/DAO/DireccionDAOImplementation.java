@@ -18,12 +18,12 @@ public class DireccionDAOImplementation implements IDireccionDAO{
     JdbcTemplate jdbcTemplate;
     
     @Override
-    public Result GetById(int IdDireccion) {
+    public Result GetByIdDireccion(int IdDireccion) {
         Result result = new Result();
         
         try {
             
-            jdbcTemplate.execute("CALL DireccionById(?,?)",
+            jdbcTemplate.execute("{CALL DireccionGetByIdDireccion(?,?)}",
                     (CallableStatementCallback<Integer>) callableStatement -> {
                         
                         callableStatement.setInt(1, IdDireccion);
