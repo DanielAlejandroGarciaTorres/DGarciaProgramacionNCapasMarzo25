@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/Alumno")
@@ -65,7 +66,7 @@ public class AlumnoController {
             alumnoDireccion.Alumno.Semestre = new Semestre();
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.Colonia = new Colonia();
-
+            
             model.addAttribute("semestres", SemestreDAOImplementation.GetAll().object);
             model.addAttribute("alumnoDireccion", alumnoDireccion);
             model.addAttribute("estados", estadoDAOImplementation.GetAll().correct ? estadoDAOImplementation.GetAll().objects : null);
@@ -76,7 +77,6 @@ public class AlumnoController {
             model.addAttribute("alumnoDirecciones", result.object);
             return "AlumnoDetail";
         }
-
     }
 
     @GetMapping("/formEditable")
@@ -118,7 +118,7 @@ public class AlumnoController {
     }
 
     @PostMapping("Form")
-    public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult, Model model) {
+    public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult,@RequestParam MultipartFile imagenFile, Model model) {
 
 //        if (alumnoDireccion.Alumno.getIdAlumno() == 0) {
 //            if (BindingResult.hasErrors()) {
@@ -152,7 +152,7 @@ public class AlumnoController {
     @ResponseBody
     public Result MunicipioByIdEstado(@PathVariable int IdEstado) {
         Result result = municipioDAOImplementation.MunicipioByIdEstado(IdEstado);
-
+        
         return result;
     }
 

@@ -213,7 +213,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                     alumnoDireccion.Alumno.setIdAlumno(resultSet.getInt("IdAlumno"));
                     alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
                     alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
-                    alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("IdAlumno"));
+                    alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
                     alumnoDireccion.Alumno.Semestre = new Semestre();
                     alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
                     alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
