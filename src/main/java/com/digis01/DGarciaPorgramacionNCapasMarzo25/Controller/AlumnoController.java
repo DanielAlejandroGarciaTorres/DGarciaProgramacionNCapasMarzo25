@@ -13,6 +13,8 @@ import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Direccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
 import jakarta.validation.Valid;
+import java.util.Base64;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,7 +68,7 @@ public class AlumnoController {
             alumnoDireccion.Alumno.Semestre = new Semestre();
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.Colonia = new Colonia();
-            
+
             model.addAttribute("semestres", SemestreDAOImplementation.GetAll().object);
             model.addAttribute("alumnoDireccion", alumnoDireccion);
             model.addAttribute("estados", estadoDAOImplementation.GetAll().correct ? estadoDAOImplementation.GetAll().objects : null);
@@ -118,19 +120,24 @@ public class AlumnoController {
     }
 
     @PostMapping("Form")
-    public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult,@RequestParam MultipartFile imagenFile, Model model) {
+    public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion, BindingResult BindingResult, @RequestParam MultipartFile imagenFile, Model model) {
 
-//        if (alumnoDireccion.Alumno.getIdAlumno() == 0) {
-//            if (BindingResult.hasErrors()) {
-//                model.addAttribute("alumnoDireccion", alumnoDireccion);
-//                return "AlumnoForm";
-//            }
-//        }
+        try {
+            if (!imagenFile.isEmpty()) {
+                byte[] bytes = imagenFile.getBytes();
+                String imgBase64 = Base64.getEncoder().encodeToString(bytes);
+                alumnoDireccion.Alumno.setImagen(imgBase64);
+            }
+        } catch (Exception ex) {
+
+        }
+
         if (alumnoDireccion.Alumno.getIdAlumno() == 0) { //Agregar
             //Logica para consumir DAO para agregar un nuevo usuario
 //            alumnoDireccion.Alumno.Semestre = new Semestre();
 //            alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
             System.out.println("Estoy agregando un nuevo usuario y direccion");
+            alumnoDireccion.Alumno.setFechaNacimiento(new Date());
             alumnoDAOImplementation.Add(alumnoDireccion);
         } else {
             if (alumnoDireccion.Direccion.getIdDireccion() == -1) { //Editar usuario
@@ -152,7 +159,7 @@ public class AlumnoController {
     @ResponseBody
     public Result MunicipioByIdEstado(@PathVariable int IdEstado) {
         Result result = municipioDAOImplementation.MunicipioByIdEstado(IdEstado);
-        
+
         return result;
     }
 

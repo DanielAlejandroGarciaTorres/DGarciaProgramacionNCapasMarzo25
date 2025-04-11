@@ -26,6 +26,7 @@ public class Alumno {
     private String Email;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
+    private String Imagen;
     
     public Alumno(){
         
@@ -99,6 +100,14 @@ public class Alumno {
 
     public void setFechaNacimiento(Date FechaNacimiento) {
         this.FechaNacimiento = FechaNacimiento;
+    }
+
+    public String getImagen() {
+        return Imagen;
+    }
+
+    public void setImagen(String Imagen) {
+        this.Imagen = Imagen;
     }
     
     

@@ -64,6 +64,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                                 alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
                                 alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
                                 alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                                alumnoDireccion.Alumno.setImagen(resultSet.getString("Imagen"));
                                 alumnoDireccion.Alumno.Semestre = new Semestre();
                                 alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
                                 alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
@@ -106,7 +107,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         Result result = new Result();
 
         try {
-            jdbcTemplate.execute("{CALL DireccionesByIdAlumno(?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Integer>) callableStatement -> {
+            jdbcTemplate.execute("{CALL AlumnoDireccionAdd(?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Integer>) callableStatement -> {
                 callableStatement.setString(1, alumnoDireccion.Alumno.getNombre());
                 callableStatement.setString(2, alumnoDireccion.Alumno.getApellidoPaterno());
                 callableStatement.setString(3, alumnoDireccion.Alumno.getApellidoMaterno());
@@ -118,6 +119,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                 callableStatement.setString(9, alumnoDireccion.Direccion.getNumeroInterior());
                 callableStatement.setString(10, alumnoDireccion.Direccion.getNumeroExterior());
                 callableStatement.setInt(11, alumnoDireccion.Direccion.Colonia.getIdColonia());
+                callableStatement.setString(12, alumnoDireccion.Alumno.getImagen());
 
                 int rowAffected = callableStatement.executeUpdate();
 

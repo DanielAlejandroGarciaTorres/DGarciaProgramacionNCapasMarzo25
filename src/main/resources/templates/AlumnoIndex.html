@@ -11,6 +11,7 @@
                 <thead>
                     <tr> 
                         <th class="col-1">Editar</th>
+                        <th class="col-1">Imagen</th>
                         <th class="col-3">Nombre</th>
                         <th class="col-2">Username</th>
                         <th >Contacto</th>
@@ -21,6 +22,9 @@
                 <tbody>
                     <tr th:each="alumnoDirecciones : ${listaAlumnos}">
                         <td><a class="btn btn-warning" th:href="@{/Alumno/Form/{IdAlumno}(IdAlumno = ${alumnoDirecciones.Alumno.IdAlumno})}"><i class="bi bi-pencil-square"></i></a></td>
+                        <td><img style="max-width: 75px" th:src="${alumnoDirecciones.Alumno.Imagen != null} ?
+    'data:image/png;base64,' + ${alumnoDirecciones.Alumno.Imagen} :
+    'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png'" /></td>
                         <td th:text="|${alumnoDirecciones.Alumno.Nombre} ${alumnoDirecciones.Alumno.ApellidoPaterno}|"></td>
                         <td></td>
                         <td></td>
