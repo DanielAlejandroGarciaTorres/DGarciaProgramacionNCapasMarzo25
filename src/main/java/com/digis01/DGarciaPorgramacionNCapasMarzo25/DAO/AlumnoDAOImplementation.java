@@ -64,7 +64,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                                 alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
                                 alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
                                 alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
-                                alumnoDireccion.Alumno.setImagen(resultSet.getString("Imagen"));
+                                //alumnoDireccion.Alumno.setImagen(resultSet.getString("Imagen"));
                                 alumnoDireccion.Alumno.Semestre = new Semestre();
                                 alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
                                 alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
@@ -265,6 +265,54 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
             result.ex = ex;
         }
 
+        return result;
+    }
+
+    @Override
+    public Result GetAllDinamico(Alumno alumno) {
+        Result result = new Result();
+        
+        try {
+            
+            jdbcTemplate.execute("CALL AlumnoGetAllDinamico(?,?,?,?,?)", (CallableStatementCallback<Integer>) callableStatement -> {
+                
+                callableStatement.setString(1, alumno.getNombre());
+                callableStatement.setString(2, alumno.getApellidoPaterno());
+                callableStatement.setString(3, alumno.getApellidoMaterno());
+                callableStatement.setInt(4, alumno.Semestre.getIdSemestre());
+                callableStatement.registerOutParameter(5, Types.REF_CURSOR);
+                
+                callableStatement.execute();
+                
+                ResultSet resultSet = (ResultSet) callableStatement.getObject(5);
+                
+                result.objects = new ArrayList<>();
+                
+                while(resultSet.next()) {
+                    AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+                    alumnoDireccion.Alumno = new Alumno();
+                    alumnoDireccion.Alumno.setIdAlumno(resultSet.getInt("IdAlumno"));
+                    alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
+                    alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
+                    alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                    alumnoDireccion.Alumno.Semestre = new Semestre();
+                    alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
+                    alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
+                    
+                    result.objects.add(alumnoDireccion);
+                }
+                
+                return 1;
+            });
+            
+                result.correct = true;
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+            result.objects = null; 
+        }
+        
         return result;
     }
 

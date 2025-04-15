@@ -4,7 +4,40 @@
 
     <body layout:fragment = "body">
         <div class="container">
-            <div>Hola <span th:text="${nombre}"></span></div>
+
+
+            <form th:action="@{/Alumno/GetAllDinamico}" method="post" th:object="${alumnoBusqueda}">
+
+                <div class="row">
+
+                    <div class="row col-8">
+                        <div class="col">
+                            <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
+                            <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}" onkeypress="return SoloLetras(event, this)">
+
+                        </div>
+                        <div class="col">
+                            <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
+                            <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
+                            <span id="ApellidoPaternoAlumnoError" class="text-danger"></span>
+                        </div>
+                        <div class="col">
+                            <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
+                            <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}">
+                        </div>
+                    </div>
+                    <div class="row col-4">
+                        <label for="semestreAlumno" class="form-label fw-bold">Semestre</label>
+                        <select id="semestreAlumno" class="form-select" aria-label="Default select example" th:field="*{Semestre.IdSemestre}">
+                            <option value=0 selected>Selecciona un semestre</option>
+                            <option th:each="semestre : ${semestres}" th:value="${semestre.IdSemestre}" th:text="${semestre.Nombre}">One</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-success mt-4 w-100 fw-bold" >Buscar</button>
+            </form>
 
             <a class="btn btn-primary"  th:href="@{/Alumno/Form/0}" ><i class="bi bi-person-add"></i> Agregar alumno</a>
             <table class="table table-dark table-striped">
@@ -23,8 +56,8 @@
                     <tr th:each="alumnoDirecciones : ${listaAlumnos}">
                         <td><a class="btn btn-warning" th:href="@{/Alumno/Form/{IdAlumno}(IdAlumno = ${alumnoDirecciones.Alumno.IdAlumno})}"><i class="bi bi-pencil-square"></i></a></td>
                         <td><img style="max-width: 75px" th:src="${alumnoDirecciones.Alumno.Imagen != null} ?
-    'data:image/png;base64,' + ${alumnoDirecciones.Alumno.Imagen} :
-    'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png'" /></td>
+                                 'data:image/png;base64,' + ${alumnoDirecciones.Alumno.Imagen} :
+                                 'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png'" /></td>
                         <td th:text="|${alumnoDirecciones.Alumno.Nombre} ${alumnoDirecciones.Alumno.ApellidoPaterno}|"></td>
                         <td></td>
                         <td></td>
@@ -34,7 +67,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <script>
         </script>
     </body>

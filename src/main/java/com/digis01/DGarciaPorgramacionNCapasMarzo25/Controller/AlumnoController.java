@@ -55,8 +55,36 @@ public class AlumnoController {
     public String Index(Model model) {
 
         Result result = alumnoDAOImplementation.GetAll();
+        Result resultSemestre = SemestreDAOImplementation.GetAll();
+        Alumno alumnoBusqueda = new Alumno();
+        alumnoBusqueda.Semestre = new Semestre();
+        
+        model.addAttribute("alumnoBusqueda", alumnoBusqueda);
+        model.addAttribute("semestres", resultSemestre.object);
         model.addAttribute("listaAlumnos", result.objects);
 
+        return "AlumnoIndex";
+    }
+    
+//    form
+//    
+//    inpput id=SemestreAlumno th:fielld=*{alumnoBusqueda.Semestre.IdSemestre}
+//    
+//    form
+//    
+    @PostMapping("/GetAllDinamico")
+    public String BusquedaDinamica(@ModelAttribute Alumno alumno, Model model){
+        
+        Result result = alumnoDAOImplementation.GetAllDinamico(alumno);
+        Result resultSemestre = SemestreDAOImplementation.GetAll();
+        Alumno alumnoBusqueda = new Alumno();
+        alumnoBusqueda.Semestre = new Semestre();
+        
+        model.addAttribute("semestres", resultSemestre.object);
+        model.addAttribute("listaAlumnos", result.objects);
+        model.addAttribute("alumnoBusqueda", alumnoBusqueda);
+        
+        
         return "AlumnoIndex";
     }
 

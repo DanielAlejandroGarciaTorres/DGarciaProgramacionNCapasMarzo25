@@ -16,4 +16,6 @@ public interface IAlumnoDAO {
     Result GetById(int IdAlumno);
     
     Result Update(Alumno alumno);
+    
+    Result GetAllDinamico(Alumno alumno);
 }
