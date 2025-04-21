@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://wwww.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate = ~{layout}>
+    <body layout:fragment ="body">
+        <div class="container mt-3">
+
+            <form class="row" th:action="@{/Alumno/CargaMasiva}" method="post" enctype="multipart/form-data"
+                  style=" padding:15px; justify-content: center;">
+
+                <div class="row" style=" padding:15px; justify-content: center;" >
+                    <a type="button" id="buttonTxT" class="btn btn-info col-2"> TxT</a>
+                </div> 
+
+                <div class="row" style=" padding:15px; justify-content: center;" >
+                    <input class="col-3" id="inputFile" name="archivo" type="file" hidden>
+                    <button class="col-2" id="submitFile" hidden> Enviar archivo </button>
+                </div>
+
+                <div th:if="${listaErrores != null}">
+                    <div class="row" th:if="${!listaErrores.isEmpty()}">
+                        <a> <h1> Error </h1></a>
+                        <table class="table table-responsive table-primary table-striped table-hover table-bordered" id="tablaError">
+                            <thead>
+                                <tr>
+                                    <th class="col-4"> Fila </th>
+                                    <th class="col-4"> Contenido </th> 
+                                    <th class="col-4"> Error </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="error : ${listaErrores}">
+                                    <td th:text=" ${error.Fila}"></td> 
+                                    <td th:text=" ${error.Mensaje} "></td> 
+                                    <td th:text=" ${error.Descripcion}"></td> 
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+        <script>
+
+            $(document).ready(function () {
+
+                let tipoArchivo;
+
+                $("#buttonTxT").click(function () {
+                    $("#inputFile").attr("hidden", false).attr("accept", ".txt");
+                    $("#submitFile").attr("hidden", false).css("background-color", "#99ccff");
+                    tipoArchivo = 'txt';
+                });
+
+                $("#inputFile").change(function () {
+
+                    if (this.files.length > 0) {
+                        var nombreArchivo = this.files[0].name;
+                        var fileType = nombreArchivo.split('.').pop().toLowerCase();
+                        if (fileType !== tipoArchivo) {
+                            alert("Por favor seleccione un archivo " + tipoArchivo.toUpperCase() + " correcto.");
+                            this.value = "";
+                        }
+                    }
+
+                });
+
+                $("#submitFile").click(function (event) {
+                    if ($("#inputFile").val() == '') {
+                        alert("Por favor selecciona un archivo.");
+                        event.preventDefault();
+                    }
+                });
+
+            });
+
+
+        </script>
+    </body>
+</html>

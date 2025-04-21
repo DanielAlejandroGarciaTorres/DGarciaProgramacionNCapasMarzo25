@@ -11,10 +11,20 @@ import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.AlumnoDireccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Colonia;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Direccion;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
+import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.ResultFile;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +61,116 @@ public class AlumnoController {
     @Autowired
     private ColoniaDAOImplementation coloniaDAOImplementation;
 
+    @GetMapping("/CargaMasiva")
+    public String CargaMasiva() {
+        return "CargaMasiva";
+    }
+
+    @PostMapping("/CargaMasiva")
+    public String CargaMasiva(@RequestParam MultipartFile archivo, Model model, HttpSession session) {
+
+        try {
+            //Guardarlo en un punto del sistema
+            if (archivo != null && !archivo.isEmpty()) { //El archivo no sea nulo ni esté vacío
+
+                String root = System.getProperty("user.dir"); //Obtener direccion del proyecto en el equipo
+                String path = "src/main/resources/static/archivos"; //Path relativo dentro del proyecto
+                String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSS"));
+                String absolutePath = root + "/" + path + "/" + fecha + archivo.getOriginalFilename();
+                archivo.transferTo(new File(absolutePath));
+
+                //Leer el archivo
+                List<AlumnoDireccion> listaAlumnos = LecturaArchivo(new File(absolutePath)); //método para leer la lista
+                //Validar el archivo
+                List<ResultFile> listaErrores = ValidarArchivo(listaAlumnos);
+
+                if (listaErrores.isEmpty()) {
+                    //Proceso mi archivo
+                    session.setAttribute("urlFile", absolutePath);
+                    model.addAttribute("listaErrores", listaErrores);
+                } else {
+                    //Mando mis errores
+                    model.addAttribute("listaErrores", listaErrores);
+                }
+
+            }
+        } catch (Exception ex) {
+            return "redirect:/Alumno/CargaMasiva";
+        }
+
+        return "CargaMasiva";
+    }
+
+    public List<AlumnoDireccion> LecturaArchivo(File archivo) {
+        List<AlumnoDireccion> listaAlumnos = new ArrayList<>();
+
+        try (FileReader fileReader = new FileReader(archivo); BufferedReader bufferedReader = new BufferedReader(fileReader);) {
+
+            String linea;
+
+            while ((linea = bufferedReader.readLine()) != null) {
+                String[] campos = linea.split("\\|");
+
+                AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+                alumnoDireccion.Alumno = new Alumno();
+                alumnoDireccion.Alumno.setNombre(campos[0]);
+                alumnoDireccion.Alumno.setApellidoPaterno(campos[1]);
+                alumnoDireccion.Alumno.setApellidoMaterno(campos[2]);
+                alumnoDireccion.Alumno.setUsername(campos[3]);
+                alumnoDireccion.Alumno.setEmail(campos[4]);
+                //Darle formato a la fecha de nacimiento
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); //Dar formato a la fecha
+                alumnoDireccion.Alumno.setFechaNacimiento(formatter.parse(campos[5]));
+                alumnoDireccion.Alumno.setStatus(Integer.parseInt(campos[6]));
+                alumnoDireccion.Alumno.setImagen(null);
+                alumnoDireccion.Alumno.Semestre = new Semestre();
+                alumnoDireccion.Alumno.Semestre.setIdSemestre(Integer.parseInt(campos[7]));
+
+                alumnoDireccion.Direccion = new Direccion();
+                alumnoDireccion.Direccion.setCalle(campos[8]);
+                alumnoDireccion.Direccion.setNumeroExterior(campos[9]);
+                alumnoDireccion.Direccion.setNumeroInterior(campos[10]);
+
+                alumnoDireccion.Direccion.Colonia = new Colonia();
+                alumnoDireccion.Direccion.Colonia.setIdColonia(Integer.parseInt(campos[11]));
+
+                listaAlumnos.add(alumnoDireccion);
+            }
+
+        } catch (Exception ex) {
+            listaAlumnos = null;
+        }
+
+        return listaAlumnos;
+    }
+
+    public List<ResultFile> ValidarArchivo(List<AlumnoDireccion> listaAlumnos) {
+        List<ResultFile> listaErrores = new ArrayList<>();
+
+        if (listaAlumnos == null) {
+            listaErrores.add(new ResultFile(0, "La lista es nula", "La lista es nula"));
+        } else if (listaAlumnos.isEmpty()) {
+            listaErrores.add(new ResultFile(0, "La lista está vacía", "La lista está vacía"));
+        } else {
+            int fila = 1;
+            for (AlumnoDireccion alumnoDireccion : listaAlumnos) {
+                if (alumnoDireccion.Alumno.getNombre() == null || alumnoDireccion.Alumno.getNombre().equals("")) {
+                    listaErrores.add(new ResultFile(fila, alumnoDireccion.Alumno.getNombre(), "El nombre es un campo oligatorio"));
+                }
+
+                if (alumnoDireccion.Alumno.getApellidoPaterno() == null || alumnoDireccion.Alumno.getApellidoPaterno().equals("")) {
+                    listaErrores.add(new ResultFile(fila, alumnoDireccion.Alumno.getApellidoPaterno(), "El Apellido Paterno es un campo oligatorio"));
+                }
+
+                if (alumnoDireccion.Alumno.getUsername() == null || alumnoDireccion.Alumno.getUsername().equals("")) {
+                    listaErrores.add(new ResultFile(fila, alumnoDireccion.Alumno.getApellidoPaterno(), "El Username es un campo oligatorio"));
+                }
+                fila++;
+            }
+        }
+        return listaErrores;
+    }
+
     @GetMapping
     public String Index(Model model) {
 
@@ -58,33 +178,26 @@ public class AlumnoController {
         Result resultSemestre = SemestreDAOImplementation.GetAll();
         Alumno alumnoBusqueda = new Alumno();
         alumnoBusqueda.Semestre = new Semestre();
-        
+
         model.addAttribute("alumnoBusqueda", alumnoBusqueda);
         model.addAttribute("semestres", resultSemestre.object);
         model.addAttribute("listaAlumnos", result.objects);
 
         return "AlumnoIndex";
     }
-    
-//    form
-//    
-//    inpput id=SemestreAlumno th:fielld=*{alumnoBusqueda.Semestre.IdSemestre}
-//    
-//    form
-//    
+
     @PostMapping("/GetAllDinamico")
-    public String BusquedaDinamica(@ModelAttribute Alumno alumno, Model model){
-        
+    public String BusquedaDinamica(@ModelAttribute Alumno alumno, Model model) {
+
         Result result = alumnoDAOImplementation.GetAllDinamico(alumno);
         Result resultSemestre = SemestreDAOImplementation.GetAll();
         Alumno alumnoBusqueda = new Alumno();
         alumnoBusqueda.Semestre = new Semestre();
-        
+
         model.addAttribute("semestres", resultSemestre.object);
         model.addAttribute("listaAlumnos", result.objects);
         model.addAttribute("alumnoBusqueda", alumnoBusqueda);
-        
-        
+
         return "AlumnoIndex";
     }
 
@@ -157,7 +270,7 @@ public class AlumnoController {
                 alumnoDireccion.Alumno.setImagen(imgBase64);
             }
         } catch (Exception ex) {
-
+            //Regresar al Form con la información que ya estaba
         }
 
         if (alumnoDireccion.Alumno.getIdAlumno() == 0) { //Agregar
