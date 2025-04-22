@@ -68,7 +68,7 @@ public class AlumnoController {
 
     @PostMapping("/CargaMasiva")
     public String CargaMasiva(@RequestParam MultipartFile archivo, Model model, HttpSession session) {
-
+        
         try {
             //Guardarlo en un punto del sistema
             if (archivo != null && !archivo.isEmpty()) { //El archivo no sea nulo ni esté vacío
@@ -80,7 +80,7 @@ public class AlumnoController {
                 archivo.transferTo(new File(absolutePath));
 
                 //Leer el archivo
-                List<AlumnoDireccion> listaAlumnos = LecturaArchivo(new File(absolutePath)); //método para leer la lista
+                List<AlumnoDireccion> listaAlumnos = LecturaArchivoTXT(new File(absolutePath)); //método para leer la lista
                 //Validar el archivo
                 List<ResultFile> listaErrores = ValidarArchivo(listaAlumnos);
 
@@ -101,7 +101,7 @@ public class AlumnoController {
         return "CargaMasiva";
     }
 
-    public List<AlumnoDireccion> LecturaArchivo(File archivo) {
+    public List<AlumnoDireccion> LecturaArchivoTXT(File archivo) {
         List<AlumnoDireccion> listaAlumnos = new ArrayList<>();
 
         try (FileReader fileReader = new FileReader(archivo); BufferedReader bufferedReader = new BufferedReader(fileReader);) {

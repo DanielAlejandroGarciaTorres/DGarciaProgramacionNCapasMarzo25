@@ -2,84 +2,94 @@
 <html xmlns:layout="http://wwww.ultraq.net.nz/thymeleaf/layout"
       layout:decorate = ~{layout}>
     <body layout:fragment ="body">
-        <div class="container mt-3">
+        <br>
+        <br>
 
-            <form class="row" th:action="@{/Alumno/CargaMasiva}" method="post" enctype="multipart/form-data"
-                  style=" padding:15px; justify-content: center;">
+        <div class="container">
 
-                <div class="row" style=" padding:15px; justify-content: center;" >
-                    <a type="button" id="buttonTxT" class="btn btn-info col-2"> TxT</a>
-                </div> 
+            <button id="mostrarFormulario" class="btn btn-primary" onclick="mostrarFormulario()">Mostrar Formulario</button>
 
-                <div class="row" style=" padding:15px; justify-content: center;" >
-                    <input class="col-3" id="inputFile" name="archivo" type="file" hidden>
-                    <button class="col-2" id="submitFile" hidden> Enviar archivo </button>
+            <div id="botones" class="row" style="display:none">
+                <div class="btn-group">
+                    <button class="btn btn-success col-md-6" id="btnExcel">Excel</button>
+                    <button class="btn btn-primary col-md-6" id="btnTxt">TXT</button>
                 </div>
+            </div>
 
-                <div th:if="${listaErrores != null}">
-                    <div class="row" th:if="${!listaErrores.isEmpty()}">
-                        <a> <h1> Error </h1></a>
-                        <table class="table table-responsive table-primary table-striped table-hover table-bordered" id="tablaError">
-                            <thead>
-                                <tr>
-                                    <th class="col-4"> Fila </th>
-                                    <th class="col-4"> Contenido </th> 
-                                    <th class="col-4"> Error </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="error : ${listaErrores}">
-                                    <td th:text=" ${error.Fila}"></td> 
-                                    <td th:text=" ${error.Mensaje} "></td> 
-                                    <td th:text=" ${error.Descripcion}"></td> 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div id="formularioArchivo" style="display: none">
+                <br>
+                <form action="/Alumno/CargaMasiva" method="post" enctype="multipart/form-data">
+                    <input type="file" id="archivo" name="archivo" accept=".xlsx,.txt">
+                    <button type="submit" class="btn btn-success" id="cargaMasiva">Subir Archivo</button>
+                </form>
+            </div>
+
+
+            <div th:if="${archivoCorrecto!= null}">
+                <div th:if="${listaErrores.isEmpty()}">
+                    <h4>Archivo correcto: </h4>
+                    <a th:href="@{/Alumno/CargaMasiva/procesar}" class="btn btn-success">Proesar archivo</a>
+                </div>
+                <div th:unless="${listaErrores.isEmpty()}">
+                    <h4>Archivo incorrecto: </h4>
+                    <table class="table table-responsive table-bordered">
+                        <thead class="table-dark">
+                        <th class="col-2">Linea</th>
+                        <th>Texto</th>
+                        <th>Error</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="error :${listaErrores}">
+                                <td th:text="${error.fila}"></td> 
+                                <td th:text="${error.texto}"></td> 
+                                <td th:text="${error.descripcionProblema}"></td> 
+                            </tr>
+                        </tbody>
+                    </table>
 
                 </div>
-
-
-            </form>
-
+            </div>
 
         </div>
 
+
         <script>
+            function mostrarFormulario() {
+                document.getElementById("mostrarFormulario").style.display = "none";
+                document.getElementById("botones").style.display = "block";
+            }
 
-            $(document).ready(function () {
+            let tipoArchivo = "";
 
-                let tipoArchivo;
-
-                $("#buttonTxT").click(function () {
-                    $("#inputFile").attr("hidden", false).attr("accept", ".txt");
-                    $("#submitFile").attr("hidden", false).css("background-color", "#99ccff");
-                    tipoArchivo = 'txt';
-                });
-
-                $("#inputFile").change(function () {
-
-                    if (this.files.length > 0) {
-                        var nombreArchivo = this.files[0].name;
-                        var fileType = nombreArchivo.split('.').pop().toLowerCase();
-                        if (fileType !== tipoArchivo) {
-                            alert("Por favor seleccione un archivo " + tipoArchivo.toUpperCase() + " correcto.");
-                            this.value = "";
-                        }
-                    }
-
-                });
-
-                $("#submitFile").click(function (event) {
-                    if ($("#inputFile").val() == '') {
-                        alert("Por favor selecciona un archivo.");
-                        event.preventDefault();
-                    }
-                });
-
+            document.getElementById("btnExcel").addEventListener("click", function () {
+                tipoArchivo = "xlsx"; 
+                document.getElementById("formularioArchivo").style.display = "block";
+                document.getElementById("archivo").setAttribute("accept", ".xlsx"); 
+                
+                document.getElementById("cargaMasiva").classList.remove("btn-primary");
+                document.getElementById("cargaMasiva").classList.add("btn-success");
             });
 
+            document.getElementById("btnTxt").addEventListener("click", function () {
+                tipoArchivo = "txt"; 
+                document.getElementById("formularioArchivo").style.display = "block";
+                document.getElementById("archivo").setAttribute("accept", ".txt"); 
+                
+                document.getElementById("cargaMasiva").classList.remove("btn-success");
+                document.getElementById("cargaMasiva").classList.add("btn-primary");
+            });
 
+            document.getElementById("archivo").addEventListener("change", function () {
+                if (this.files.length > 0) {
+                    var fileName = this.files[0].name;
+                    var fileExtension = fileName.split('.').pop().toLowerCase();
+
+                    if (fileExtension !== tipoArchivo) {
+                        alert("Por favor, seleccione un archivo " + tipoArchivo.toUpperCase() + " válido.");
+                        this.value = "";
+                    }
+                }
+            });
         </script>
     </body>
 </html>
