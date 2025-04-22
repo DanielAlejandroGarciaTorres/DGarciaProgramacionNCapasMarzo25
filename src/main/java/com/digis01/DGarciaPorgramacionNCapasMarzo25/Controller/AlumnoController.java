@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,10 +72,14 @@ public class AlumnoController {
 
     @PostMapping("/CargaMasiva")
     public String CargaMasiva(@RequestParam MultipartFile archivo, Model model, HttpSession session) {
-        
+
         try {
             //Guardarlo en un punto del sistema
             if (archivo != null && !archivo.isEmpty()) { //El archivo no sea nulo ni esté vacío
+
+                //"NombreArchivo.txt"
+                //String[] arreglo = {"NombreArchivo", "txt"};
+                String tipoArchivo = archivo.getOriginalFilename().split("\\.")[1];
 
                 String root = System.getProperty("user.dir"); //Obtener direccion del proyecto en el equipo
                 String path = "src/main/resources/static/archivos"; //Path relativo dentro del proyecto
@@ -80,7 +88,13 @@ public class AlumnoController {
                 archivo.transferTo(new File(absolutePath));
 
                 //Leer el archivo
-                List<AlumnoDireccion> listaAlumnos = LecturaArchivoTXT(new File(absolutePath)); //método para leer la lista
+                List<AlumnoDireccion> listaAlumnos = new ArrayList();
+                if (tipoArchivo.equals("txt")) {
+                    listaAlumnos = LecturaArchivoTXT(new File(absolutePath)); //método para leer la lista
+                } else {
+                    listaAlumnos = LecturaArchivoExcel(new File(absolutePath));
+                }
+
                 //Validar el archivo
                 List<ResultFile> listaErrores = ValidarArchivo(listaAlumnos);
 
@@ -139,6 +153,33 @@ public class AlumnoController {
 
         } catch (Exception ex) {
             listaAlumnos = null;
+        }
+
+        return listaAlumnos;
+    }
+
+    public List<AlumnoDireccion> LecturaArchivoExcel(File archivo) {
+        List<AlumnoDireccion> listaAlumnos = new ArrayList<>();
+        try (XSSFWorkbook workbook = new XSSFWorkbook(archivo);) {
+            for (Sheet sheet : workbook) {
+
+                for (Row row : sheet) {
+
+                    AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+                    alumnoDireccion.Alumno = new Alumno();
+                    alumnoDireccion.Alumno.setNombre(row.getCell(0).toString());
+                    alumnoDireccion.Alumno.setApellidoPaterno(row.getCell(1).toString());
+                    alumnoDireccion.Alumno.setApellidoMaterno(row.getCell(2).toString());
+                    alumnoDireccion.Alumno.setEmail(row.getCell(3).toString());
+                    alumnoDireccion.Alumno.Semestre = new Semestre();
+                    alumnoDireccion.Alumno.Semestre.setIdSemestre(Integer.parseInt(row.getCell(4).toString()));
+                    alumnoDireccion.Alumno.setStatus(row.getCell(3) != null ? (int) row.getCell(3).getNumericCellValue() : 0 );
+                    
+                }
+                
+            }
+        } catch (Exception ex) {
+            System.out.println("Error al abrir el archivo");
         }
 
         return listaAlumnos;
