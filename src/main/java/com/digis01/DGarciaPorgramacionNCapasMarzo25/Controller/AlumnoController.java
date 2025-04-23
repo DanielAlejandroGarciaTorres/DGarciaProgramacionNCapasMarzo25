@@ -187,6 +187,11 @@ public class AlumnoController {
 
     public List<ResultFile> ValidarArchivo(List<AlumnoDireccion> listaAlumnos) {
         List<ResultFile> listaErrores = new ArrayList<>();
+        
+        
+        
+        
+        
 
         if (listaAlumnos == null) {
             listaErrores.add(new ResultFile(0, "La lista es nula", "La lista es nula"));
