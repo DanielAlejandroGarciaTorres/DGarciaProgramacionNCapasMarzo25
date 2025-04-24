@@ -221,6 +221,7 @@ public class AlumnoController {
     public String Index(Model model) {
 
         Result result = alumnoDAOImplementation.GetAll();
+        alumnoDAOImplementation.GetAllJPA();
         Result resultSemestre = SemestreDAOImplementation.GetAll();
         Alumno alumnoBusqueda = new Alumno();
         alumnoBusqueda.Semestre = new Semestre();

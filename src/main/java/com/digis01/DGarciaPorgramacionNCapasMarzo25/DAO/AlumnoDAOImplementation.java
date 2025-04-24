@@ -8,6 +8,8 @@ import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Estado;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Municipio;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -20,8 +22,11 @@ import org.springframework.stereotype.Repository;
 @Repository // logica de base de datos
 public class AlumnoDAOImplementation implements IAlumnoDAO {
 
-    @Autowired //Inyección dependencias (field, contructor, setter)
+    @Autowired //Inyección dependencias (field, contructor, setter)    conexion de JDBC
     private JdbcTemplate jdbcTemplate; // conexión directa 
+    
+    @Autowired // conexión de JPA
+    private EntityManager entityManager;
 
     @Override
     public Result GetAll() {
@@ -314,6 +319,14 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         }
         
         return result;
+    }
+
+    @Override
+    public Result GetAllJPA() {
+        //  Esto es lenguaje JPQL
+        TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> queryAlumnos = entityManager.createQuery("FROM Alumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class);
+        List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> alumnos = queryAlumnos.getResultList();
+        return null;
     }
 
 }

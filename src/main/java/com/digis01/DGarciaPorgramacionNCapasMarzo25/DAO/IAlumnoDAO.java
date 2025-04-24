@@ -18,4 +18,6 @@ public interface IAlumnoDAO {
     Result Update(Alumno alumno);
     
     Result GetAllDinamico(Alumno alumno);
+    
+    Result GetAllJPA();
 }
