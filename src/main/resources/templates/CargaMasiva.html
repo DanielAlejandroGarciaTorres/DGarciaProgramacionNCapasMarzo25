@@ -9,14 +9,14 @@
 
             <button id="mostrarFormulario" class="btn btn-primary" onclick="mostrarFormulario()">Mostrar Formulario</button>
 
-            <div id="botones" class="row" style="display:none">
+            <div id="botones" class="row m-3" style="display:none">
                 <div class="btn-group">
                     <button class="btn btn-success col-md-6" id="btnExcel">Excel</button>
                     <button class="btn btn-primary col-md-6" id="btnTxt">TXT</button>
                 </div>
             </div>
 
-            <div id="formularioArchivo" style="display: none">
+            <div id="formularioArchivo" style="display: none" class="mt-3">
                 <br>
                 <form action="/Alumno/CargaMasiva" method="post" enctype="multipart/form-data">
                     <input type="file" id="archivo" name="archivo" accept=".xlsx,.txt">
@@ -25,10 +25,10 @@
             </div>
 
 
-            <div th:if="${archivoCorrecto!= null}">
+            <div th:if="${listaErrores!= null}">
                 <div th:if="${listaErrores.isEmpty()}">
                     <h4>Archivo correcto: </h4>
-                    <a th:href="@{/Alumno/CargaMasiva/procesar}" class="btn btn-success">Proesar archivo</a>
+                    <a th:href="@{/Alumno/CargaMasiva/Procesar}" class="btn btn-success">Procesar archivo</a>
                 </div>
                 <div th:unless="${listaErrores.isEmpty()}">
                     <h4>Archivo incorrecto: </h4>
@@ -40,9 +40,9 @@
                         </thead>
                         <tbody>
                             <tr th:each="error :${listaErrores}">
-                                <td th:text="${error.fila}"></td> 
-                                <td th:text="${error.texto}"></td> 
-                                <td th:text="${error.descripcionProblema}"></td> 
+                                <td th:text="${error.Fila}"></td> 
+                                <td th:text="${error.Mensaje}"></td> 
+                                <td th:text="${error.Descripcion}"></td> 
                             </tr>
                         </tbody>
                     </table>

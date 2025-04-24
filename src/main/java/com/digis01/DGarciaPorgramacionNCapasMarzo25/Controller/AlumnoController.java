@@ -101,6 +101,7 @@ public class AlumnoController {
                 if (listaErrores.isEmpty()) {
                     //Proceso mi archivo
                     session.setAttribute("urlFile", absolutePath);
+                    session.setAttribute("tipoArchivo", tipoArchivo);
                     model.addAttribute("listaErrores", listaErrores);
                 } else {
                     //Mando mis errores
@@ -216,19 +217,39 @@ public class AlumnoController {
         }
         return listaErrores;
     }
+    
+    @GetMapping("/CargaMasiva/Procesar")
+    public String Procesar(HttpSession session) {
+        
+        String absolutePath = session.getAttribute("urlFile").toString();
+        String tipoArchivo = session.getAttribute("tipoArchivo").toString();
+        List<AlumnoDireccion> listaAlumnos = new ArrayList<>();
+        
+        if (tipoArchivo.equals("txt")) {
+            listaAlumnos = LecturaArchivoTXT(new File(absolutePath));
+        } else {
+            listaAlumnos = LecturaArchivoExcel(new File(absolutePath));
+        }
+        
+        for (AlumnoDireccion alumnoDireccion : listaAlumnos) {
+            alumnoDAOImplementation.Add(alumnoDireccion);
+        }
+        
+        return "/CargaMasiva";
+    }
 
     @GetMapping
     public String Index(Model model) {
 
         Result result = alumnoDAOImplementation.GetAll();
-        alumnoDAOImplementation.GetAllJPA();
+        Result resultJPA = alumnoDAOImplementation.GetAllJPA();
         Result resultSemestre = SemestreDAOImplementation.GetAll();
         Alumno alumnoBusqueda = new Alumno();
         alumnoBusqueda.Semestre = new Semestre();
 
         model.addAttribute("alumnoBusqueda", alumnoBusqueda);
         model.addAttribute("semestres", resultSemestre.object);
-        model.addAttribute("listaAlumnos", result.objects);
+        model.addAttribute("listaAlumnos", resultJPA.objects);
 
         return "AlumnoIndex";
     }
@@ -238,12 +259,10 @@ public class AlumnoController {
 
         Result result = alumnoDAOImplementation.GetAllDinamico(alumno);
         Result resultSemestre = SemestreDAOImplementation.GetAll();
-        Alumno alumnoBusqueda = new Alumno();
-        alumnoBusqueda.Semestre = new Semestre();
-
+        
         model.addAttribute("semestres", resultSemestre.object);
         model.addAttribute("listaAlumnos", result.objects);
-        model.addAttribute("alumnoBusqueda", alumnoBusqueda);
+        model.addAttribute("alumnoBusqueda", alumno);
 
         return "AlumnoIndex";
     }

@@ -10,6 +10,7 @@ import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Semestre;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
 
     @Autowired //Inyección dependencias (field, contructor, setter)    conexion de JDBC
     private JdbcTemplate jdbcTemplate; // conexión directa 
-    
+
     @Autowired // conexión de JPA
     private EntityManager entityManager;
 
@@ -69,7 +70,8 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                                 alumnoDireccion.Alumno.setNombre(resultSet.getString("NombreAlumno"));
                                 alumnoDireccion.Alumno.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
                                 alumnoDireccion.Alumno.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
-                                //alumnoDireccion.Alumno.setImagen(resultSet.getString("Imagen"));
+                                alumnoDireccion.Alumno.setUsername(resultSet.getString("Username"));
+                                alumnoDireccion.Alumno.setImagen(resultSet.getString("Imagen"));
                                 alumnoDireccion.Alumno.Semestre = new Semestre();
                                 alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
                                 alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
@@ -112,7 +114,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         Result result = new Result();
 
         try {
-            jdbcTemplate.execute("{CALL AlumnoDireccionAdd(?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Integer>) callableStatement -> {
+            jdbcTemplate.execute("{CALL AlumnoDireccionAdd(?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Integer>) callableStatement -> {
                 callableStatement.setString(1, alumnoDireccion.Alumno.getNombre());
                 callableStatement.setString(2, alumnoDireccion.Alumno.getApellidoPaterno());
                 callableStatement.setString(3, alumnoDireccion.Alumno.getApellidoMaterno());
@@ -125,8 +127,10 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                 callableStatement.setString(10, alumnoDireccion.Direccion.getNumeroExterior());
                 callableStatement.setInt(11, alumnoDireccion.Direccion.Colonia.getIdColonia());
                 callableStatement.setString(12, alumnoDireccion.Alumno.getImagen());
+                callableStatement.registerOutParameter(13, Types.INTEGER);
 
-                int rowAffected = callableStatement.executeUpdate();
+                callableStatement.executeUpdate();
+                int rowAffected = callableStatement.getInt(13);
 
                 result.correct = rowAffected > 0 ? true : false;
 
@@ -276,24 +280,24 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
     @Override
     public Result GetAllDinamico(Alumno alumno) {
         Result result = new Result();
-        
+
         try {
-            
+
             jdbcTemplate.execute("CALL AlumnoGetAllDinamico(?,?,?,?,?)", (CallableStatementCallback<Integer>) callableStatement -> {
-                
+
                 callableStatement.setString(1, alumno.getNombre());
                 callableStatement.setString(2, alumno.getApellidoPaterno());
                 callableStatement.setString(3, alumno.getApellidoMaterno());
                 callableStatement.setInt(4, alumno.Semestre.getIdSemestre());
                 callableStatement.registerOutParameter(5, Types.REF_CURSOR);
-                
+
                 callableStatement.execute();
-                
+
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(5);
-                
+
                 result.objects = new ArrayList<>();
-                
-                while(resultSet.next()) {
+
+                while (resultSet.next()) {
                     AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
                     alumnoDireccion.Alumno = new Alumno();
                     alumnoDireccion.Alumno.setIdAlumno(resultSet.getInt("IdAlumno"));
@@ -303,30 +307,102 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
                     alumnoDireccion.Alumno.Semestre = new Semestre();
                     alumnoDireccion.Alumno.Semestre.setIdSemestre(resultSet.getInt("IdSemestre"));
                     alumnoDireccion.Alumno.Semestre.setNombre(resultSet.getString("NombreSemestre"));
-                    
+
                     result.objects.add(alumnoDireccion);
                 }
-                
+
                 return 1;
             });
-            
-                result.correct = true;
+
+            result.correct = true;
         } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
-            result.objects = null; 
+            result.objects = null;
         }
-        
+
         return result;
     }
 
     @Override
     public Result GetAllJPA() {
         //  Esto es lenguaje JPQL
-        TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> queryAlumnos = entityManager.createQuery("FROM Alumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class);
-        List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> alumnos = queryAlumnos.getResultList();
-        return null;
+        Result result = new Result();
+        try {
+            TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> queryAlumnos = entityManager.createQuery("FROM Alumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class);
+            List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> alumnos = queryAlumnos.getResultList();
+            result.objects = new ArrayList<>();
+            for (com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumno : alumnos) {
+                
+                AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+                alumnoDireccion.Alumno = new Alumno();
+                alumnoDireccion.Alumno.setIdAlumno(alumno.getIdAlumno());
+                alumnoDireccion.Alumno.setNombre(alumno.getNombre());
+                alumnoDireccion.Alumno.setApellidoPaterno(alumno.getApellidoPaterno());
+                alumnoDireccion.Alumno.setApellidoMaterno(alumno.getApellidoMaterno());
+                alumnoDireccion.Alumno.setEmail(alumno.getEmail());
+                
+                
+                TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> queryDireccion = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno = :idalumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion.class);
+                queryDireccion.setParameter("idalumno", alumno.getIdAlumno());
+                
+                List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> direccionesJPA = queryDireccion.getResultList();
+                alumnoDireccion.Direcciones = new ArrayList();
+                for (com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion direccionJPA : direccionesJPA) {
+                    Direccion direccion = new Direccion();
+                    direccion.setCalle(direccionJPA.getCalle());
+                    direccion.setNumeroExterior(direccionJPA.getNumeroExterior());
+                    direccion.setNumeroInterior(direccionJPA.getNumeroInterior());
+                    direccion.Colonia = new Colonia();
+                    
+                    direccion.Colonia.setIdColonia(direccionJPA.Colonia.getIdColonia());
+                    
+                    alumnoDireccion.Direcciones.add(direccion);
+                }
+                
+                result.objects.add(alumnoDireccion);
+                
+            }
+            
+            result.correct = true;
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
+
+        return result;
+
+    }
+
+    @Transactional
+    @Override
+    public Result AddJPA(AlumnoDireccion alumnoDireccion) {
+        Result result = new Result();
+        
+        try {
+            
+            //llenado de alumnoJPA con el alumnoML
+            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA;
+            //entityManager.persist(alumnoJPA); para agregar
+            
+            //entityManager.merge(); para actualizar
+            //merge actualiza con id != 0
+            //merge agrega con id == 0
+            
+            //entityManager.remove(alumno);
+            
+            System.out.println("");
+            
+            result.correct = true;
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
+        
+        return result;
     }
 
 }

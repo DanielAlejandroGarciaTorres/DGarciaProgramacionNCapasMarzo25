@@ -1,6 +1,5 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.ML;
 
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,38 +7,37 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Alumno {
-    
+
     private int IdAlumno;
-    
+
     @NotNull
     @NotEmpty(message = "Ingresa información,")
-    @Size(min = 3, max = 50, message="Entre 3 y 50 caracteres")
+    @Size(min = 3, max = 50, message = "Entre 3 y 50 caracteres")
     private String Nombre;
-    
+
     @NotNull(message = "No se permiten nulos")
     private String ApellidoPaterno;
     private String ApellidoMaterno;
     public Semestre Semestre;
-    
+
     @NotNull(message = "No se permiten nulos")
     private String Username;
     private String Email;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
     private String Imagen;
-    
+
     private int Status;
     
-    public Alumno(){
-        
+    public Alumno() {
+
     }
-    
+
     public Alumno(String Nombre, String ApellidoPaterno) {
         this.Nombre = Nombre;
         this.ApellidoPaterno = ApellidoPaterno;
     }
-    
-    
+
     public int getIdAlumno() {
         return IdAlumno;
     }
@@ -119,5 +117,5 @@ public class Alumno {
     public void setStatus(int Status) {
         this.Status = Status;
     }
-    
+
 }

@@ -59,7 +59,7 @@
                                  'data:image/png;base64,' + ${alumnoDirecciones.Alumno.Imagen} :
                                  'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png'" /></td>
                         <td th:text="|${alumnoDirecciones.Alumno.Nombre} ${alumnoDirecciones.Alumno.ApellidoPaterno}|"></td>
-                        <td></td>
+                        <td th:text="${alumnoDirecciones.Alumno.Username}"></td>
                         <td></td>
                         <td><ul><li th:each="direccion : ${alumnoDirecciones.Direcciones}" th:text="|${direccion.Calle} ${direccion.NumeroInterior} ${direccion.NumeroExterior}, ${direccion.Colonia.Nombre}|"></li></ul></td>
                         <td><a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a></td>

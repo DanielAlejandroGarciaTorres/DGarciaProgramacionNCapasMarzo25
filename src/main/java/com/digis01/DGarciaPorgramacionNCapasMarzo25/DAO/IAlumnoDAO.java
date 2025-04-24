@@ -20,4 +20,6 @@ public interface IAlumnoDAO {
     Result GetAllDinamico(Alumno alumno);
     
     Result GetAllJPA();
+    
+    Result AddJPA(AlumnoDireccion alumnoDireccion);
 }
