@@ -3,9 +3,12 @@ package com.digis01.DGarciaPorgramacionNCapasMarzo25.DAO;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Colonia;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Municipio;
 import com.digis01.DGarciaPorgramacionNCapasMarzo25.ML.Result;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +19,9 @@ public class ColoniaDAOImplementation implements IColoniaDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private EntityManager entityManager;
     
     @Override
     public Result ColoniaByIdMunicipio(int IdMunicipio) {
@@ -52,6 +58,16 @@ public class ColoniaDAOImplementation implements IColoniaDAO {
         }
 
         return result;
+    }
+
+    @Override
+    public Result ColoniaByIdMunicipioJPA(int IdMunicipio) {
+        
+        com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia coloniaJPA = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia();
+        TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia> queryColonia = entityManager.createQuery("FROM Colonia WHERE Municipio.IdMunicipio = :idmunicipio", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia.class);
+        List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia> coloniasJPA = queryColonia.getResultList();
+        coloniaJPA = entityManager.find(com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia.class, IdMunicipio);
+        return null;
     }
 
 }

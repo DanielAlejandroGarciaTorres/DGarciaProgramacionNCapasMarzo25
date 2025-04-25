@@ -22,4 +22,10 @@ public interface IAlumnoDAO {
     Result GetAllJPA();
     
     Result AddJPA(AlumnoDireccion alumnoDireccion);
+    
+    Result GetAllDinamicoJPA(Alumno alumno);
+    
+    Result DeleteJPA(int IdAlumno);
+    
+    Result UpdateAlumnoJPA(Alumno alumno);
 }
