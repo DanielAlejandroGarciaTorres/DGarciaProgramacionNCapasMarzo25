@@ -345,7 +345,8 @@ public class AlumnoController {
 //            alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
             System.out.println("Estoy agregando un nuevo usuario y direccion");
             alumnoDireccion.Alumno.setFechaNacimiento(new Date());
-            alumnoDAOImplementation.Add(alumnoDireccion);
+//            alumnoDAOImplementation.Add(alumnoDireccion);
+            alumnoDAOImplementation.AddJPA(alumnoDireccion);
         } else {
             if (alumnoDireccion.Direccion.getIdDireccion() == -1) { //Editar usuario
                 alumnoDAOImplementation.Update(alumnoDireccion.Alumno);

@@ -384,14 +384,33 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         try {
             
             //llenado de alumnoJPA con el alumnoML
-            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA;
-            //entityManager.persist(alumnoJPA); para agregar
+            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno();
+            alumnoJPA.setNombre(alumnoDireccion.Alumno.getNombre());
+            alumnoJPA.setApellidoPaterno(alumnoDireccion.Alumno.getApellidoPaterno());
+            alumnoJPA.setApellidoMaterno(alumnoDireccion.Alumno.getApellidoMaterno());
+            alumnoJPA.Semestre = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Semestre(); 
+            alumnoJPA.Semestre.setIdSemestre(alumnoDireccion.Alumno.Semestre.getIdSemestre());
+            alumnoJPA.setEmail(alumnoDireccion.Alumno.getEmail());
+            alumnoJPA.setUsername(alumnoDireccion.Alumno.getUsername());
+            alumnoJPA.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
             
-            //entityManager.merge(); para actualizar
-            //merge actualiza con id != 0
-            //merge agrega con id == 0
+            entityManager.persist(alumnoJPA);
             
-            //entityManager.remove(alumno);
+            
+            /*inserción de dirección*/
+            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion direccionJPA
+                    = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion();
+            direccionJPA.setCalle(alumnoDireccion.Direccion.getCalle());
+            direccionJPA.setNumeroExterior(alumnoDireccion.Direccion.getNumeroExterior());
+            direccionJPA.setNumeroInterior(alumnoDireccion.Direccion.getNumeroInterior());
+            direccionJPA.Colonia = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Colonia();
+            direccionJPA.Colonia.setIdColonia(alumnoDireccion.Direccion.Colonia.getIdColonia());
+            direccionJPA.Alumno = alumnoJPA;
+
+            /*direccionJPA.Alumno = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno();
+            direccionJPA.Alumno.setIdAlumno(alumnoJPA.getIdAlumno());*/
+            
+            entityManager.persist(direccionJPA);
             
             System.out.println("");
             
@@ -405,4 +424,21 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         return result;
     }
 
+    
+    /*
+    CRUD Usuario
+    - agregar usuario direccion
+        - getbymunicipio
+        - getbyesta ...   JPQL - Typedquery
+    - agregar direccion
+    - editar usuario
+    - editar direccion
+    - eliminar usuario - direccciones
+    - eliminar direccion
+    
+    
+    
+    busqueda dinámica  JPQL
+    */
+    
 }

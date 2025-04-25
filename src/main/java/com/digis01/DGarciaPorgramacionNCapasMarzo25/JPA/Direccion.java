@@ -34,6 +34,12 @@ public class Direccion {
     @ManyToOne
     public Alumno Alumno;
     
+    /*
+    @Column( name = "idalumno")
+    private int IdAlumno;
+    */
+    
+    
     public int getIdDireccion() {
         return IdDireccion;
     }
