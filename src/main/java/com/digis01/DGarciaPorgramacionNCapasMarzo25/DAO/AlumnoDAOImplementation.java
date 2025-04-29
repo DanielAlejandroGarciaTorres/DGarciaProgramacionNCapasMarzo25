@@ -446,13 +446,13 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
 
             String queryDinamico = "FROM Usuario";
 
-            queryDinamico = queryDinamico + " WHERE Nombre = :nombre ";
+            queryDinamico = queryDinamico + " WHERE Nombre LIKE :nombre";
             queryDinamico = queryDinamico + " AND  ApellidoPaterno = :apaterno ";
             queryDinamico = queryDinamico + " AND AMaterno = :amaterno ";
             //validar si se concatena lo de semestre
 
             TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> queryAlumno = entityManager.createQuery(queryDinamico, com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class);
-            queryAlumno.setParameter(":nombre", alumno.getNombre());
+            queryAlumno.setParameter("%" + ":nombre" + "%", alumno.getNombre());
             queryAlumno.setParameter(":apaterno", alumno.getApellidoPaterno());
             queryAlumno.setParameter(":amaterno", alumno.getApellidoMaterno());
             List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno> alumnos = queryAlumno.getResultList();
@@ -493,6 +493,33 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
         //vaciar alumno ML a alumno JPA
         
         entityManager.merge(alumnoJPA);
+        
+        return result;
+    }
+
+    @Override
+    public Result DireccionUsuarioByIdAlumnoJPA(int IdAlumno) {
+        Result result = new Result();
+        
+        try {
+            
+            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA =
+                    entityManager.find(com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class, IdAlumno);
+            
+            TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> queryDireccion = 
+                    entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno = :idalumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion.class);
+            queryDireccion.setParameter("idalumno", IdAlumno);
+            
+            List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> direccionesJPA =
+                    queryDireccion.getResultList();
+            
+            
+            /*vaciar info en ML*/
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
         
         return result;
     }

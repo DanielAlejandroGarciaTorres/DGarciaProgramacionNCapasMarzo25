@@ -28,4 +28,6 @@ public interface IAlumnoDAO {
     Result DeleteJPA(int IdAlumno);
     
     Result UpdateAlumnoJPA(Alumno alumno);
+    
+    Result DireccionUsuarioByIdAlumnoJPA(int IdAlumno);
 }
