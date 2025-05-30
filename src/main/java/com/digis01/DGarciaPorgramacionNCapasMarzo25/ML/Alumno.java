@@ -22,13 +22,14 @@ public class Alumno {
 
     @NotNull(message = "No se permiten nulos")
     private String Username;
+    private String Password;
     private String Email;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
     private String Imagen;
 
     private int Status;
-    
+
     public Alumno() {
 
     }
@@ -116,6 +117,14 @@ public class Alumno {
 
     public void setStatus(int Status) {
         this.Status = Status;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,52 +11,53 @@ import jakarta.persistence.ManyToOne;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 @Entity
 public class Alumno {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idalumno")
     private int IdAlumno;
-    
+
     @Column(name = "nombre")
     private String Nombre;
-    
+
     @Column(name = "apellidopaterno")
     private String ApellidoPaterno;
-    
+
     @Column(name = "apellidomaterno")
     private String ApellidoMaterno;
-    
+
     @JoinColumn(name = "idsemestre")
     @ManyToOne
     public Semestre Semestre;
-    
+
     @Column(name = "username")
     private String Username;
-    
+
+    @Column(name = "password")
+    private String Password;
+
     @Column(name = "email")
     private String Email;
-    
+
     @Column(name = "fechanacimiento")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
-    
+
     @Lob
     @Column(name = "imagen")
     private String Imagen;
-    
-    
-    public Alumno(){
-        
+
+    public Alumno() {
+
     }
-    
+
     public Alumno(String Nombre, String ApellidoPaterno) {
         this.Nombre = Nombre;
         this.ApellidoPaterno = ApellidoPaterno;
     }
-    
-    
+
     public int getIdAlumno() {
         return IdAlumno;
     }
@@ -106,6 +106,14 @@ public class Alumno {
         this.Username = Username;
     }
 
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
+
     public String getEmail() {
         return Email;
     }
@@ -130,5 +138,4 @@ public class Alumno {
         this.Imagen = Imagen;
     }
 
-    
 }

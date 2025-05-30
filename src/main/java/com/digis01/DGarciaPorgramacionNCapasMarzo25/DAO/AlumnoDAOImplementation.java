@@ -18,6 +18,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @Repository // logica de base de datos
@@ -28,6 +29,9 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
 
     @Autowired // conexión de JPA
     private EntityManager entityManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Result GetAll() {
@@ -392,6 +396,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
             alumnoJPA.Semestre.setIdSemestre(alumnoDireccion.Alumno.Semestre.getIdSemestre());
             alumnoJPA.setEmail(alumnoDireccion.Alumno.getEmail());
             alumnoJPA.setUsername(alumnoDireccion.Alumno.getUsername());
+            alumnoJPA.setPassword(passwordEncoder.encode(alumnoDireccion.Alumno.getPassword()));
             alumnoJPA.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
 
             entityManager.persist(alumnoJPA);
@@ -488,39 +493,36 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
 
         com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA = new com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno();
         //alumnoJPA = entityManager.find(com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class, alumno.getIdAlumno());
-              
-        
+
         //vaciar alumno ML a alumno JPA
-        
         entityManager.merge(alumnoJPA);
-        
+
         return result;
     }
 
     @Override
     public Result DireccionUsuarioByIdAlumnoJPA(int IdAlumno) {
         Result result = new Result();
-        
+
         try {
-            
-            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA =
-                    entityManager.find(com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class, IdAlumno);
-            
-            TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> queryDireccion = 
-                    entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno = :idalumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion.class);
+
+            com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno alumnoJPA
+                    = entityManager.find(com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Alumno.class, IdAlumno);
+
+            TypedQuery<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> queryDireccion
+                    = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno = :idalumno", com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion.class);
             queryDireccion.setParameter("idalumno", IdAlumno);
-            
-            List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> direccionesJPA =
-                    queryDireccion.getResultList();
-            
-            
+
+            List<com.digis01.DGarciaPorgramacionNCapasMarzo25.JPA.Direccion> direccionesJPA
+                    = queryDireccion.getResultList();
+
             /*vaciar info en ML*/
         } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        
+
         return result;
     }
 

@@ -6,7 +6,7 @@
         <div class="container">
 
 
-            <form th:action="@{/Alumno/GetAllDinamico}" method="post" th:object="${alumnoBusqueda}">
+            <form sec:authorize="hasAuthority('3er Semestre')" th:action="@{/Alumno/GetAllDinamico}" method="post" th:object="${alumnoBusqueda}">
 
                 <div class="row">
 
@@ -43,18 +43,18 @@
             <table class="table table-dark table-striped">
                 <thead>
                     <tr> 
-                        <th class="col-1">Editar</th>
+                        <th sec:authorize="hasAuthority('3er Semestre')" class="col-1">Editar</th>
                         <th class="col-1">Imagen</th>
                         <th class="col-3">Nombre</th>
                         <th class="col-2">Username</th>
                         <th >Contacto</th>
                         <th >Direccion</th>
-                        <th >Eliminar</th>
+                        <th sec:authorize="hasAuthority('3er Semestre')" >Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="alumnoDirecciones : ${listaAlumnos}">
-                        <td><a class="btn btn-warning" th:href="@{/Alumno/Form/{IdAlumno}(IdAlumno = ${alumnoDirecciones.Alumno.IdAlumno})}"><i class="bi bi-pencil-square"></i></a></td>
+                        <td sec:authorize="hasAuthority('3er Semestre')" ><a class="btn btn-warning" th:href="@{/Alumno/Form/{IdAlumno}(IdAlumno = ${alumnoDirecciones.Alumno.IdAlumno})}"><i class="bi bi-pencil-square"></i></a></td>
                         <td><img style="max-width: 75px" th:src="${alumnoDirecciones.Alumno.Imagen != null} ?
                                  'data:image/png;base64,' + ${alumnoDirecciones.Alumno.Imagen} :
                                  'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png'" /></td>
@@ -62,7 +62,7 @@
                         <td th:text="${alumnoDirecciones.Alumno.Username}"></td>
                         <td></td>
                         <td><ul><li th:each="direccion : ${alumnoDirecciones.Direcciones}" th:text="|${direccion.Calle} ${direccion.NumeroInterior} ${direccion.NumeroExterior}, ${direccion.Colonia.Nombre}|"></li></ul></td>
-                        <td><a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a></td>
+                        <td sec:authorize="hasAuthority('3er Semestre')"><a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a></td>
                     </tr>
                 </tbody>
             </table>

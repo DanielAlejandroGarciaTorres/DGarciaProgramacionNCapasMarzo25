@@ -344,7 +344,7 @@ public class AlumnoController {
 //            alumnoDireccion.Alumno.Semestre = new Semestre();
 //            alumnoDireccion.Alumno.Semestre.setIdSemestre(10);
             System.out.println("Estoy agregando un nuevo usuario y direccion");
-            alumnoDireccion.Alumno.setFechaNacimiento(new Date());
+            alumnoDireccion.Alumno.setFechaNacimiento(new Date(19990810L));
 //            alumnoDAOImplementation.Add(alumnoDireccion);
             alumnoDAOImplementation.AddJPA(alumnoDireccion);
         } else {
