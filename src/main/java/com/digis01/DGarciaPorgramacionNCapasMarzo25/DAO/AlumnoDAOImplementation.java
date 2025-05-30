@@ -396,7 +396,7 @@ public class AlumnoDAOImplementation implements IAlumnoDAO {
             alumnoJPA.Semestre.setIdSemestre(alumnoDireccion.Alumno.Semestre.getIdSemestre());
             alumnoJPA.setEmail(alumnoDireccion.Alumno.getEmail());
             alumnoJPA.setUsername(alumnoDireccion.Alumno.getUsername());
-            alumnoJPA.setPassword(passwordEncoder.encode(alumnoDireccion.Alumno.getPassword()));
+            alumnoJPA.setPassword(alumnoDireccion.Alumno.getPassword());
             alumnoJPA.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
 
             entityManager.persist(alumnoJPA);
